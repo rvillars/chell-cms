@@ -1,0 +1,55 @@
+<div ng-controller="ContentManagerController">
+    <div ng-show="list">
+        <button class="btn btn-primary btn-xs" ng-click="create()"><i style="padding-right: 10px" class="glyphicon glyphicon-edit"></i>Create Content</button>
+        <table ng-table="tableParams" cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="datatable">
+            <tbody>
+            <tr ng-repeat="content in data">
+                <td data-title="'Title'">{{content.title}}</td>
+                <td data-title="'Creation Date'" class="center">{{content.creationDate | date:'dd.MM.yyyy'}}</td>
+                <td data-title="'Content ID'" class="center">{{content.id}}</td>
+                <td data-title="'Access Rights'" class="center">{{content.accessRights}}</td>
+                <td data-title="'State'" class="center">
+                    <span class="badge">{{content.status}}</span>
+                </td>
+                <td data-title="'Actions'" class="center">
+                    <div class="btn-group btn-group-sm">
+                        <button class="btn btn-default" title="View" ng-click="view(content)">
+                            <i class="glyphicon glyphicon-zoom-in icon-white"></i>
+                        </button>
+                        <button class="btn btn-default" title="Edit" ng-click="edit(content)">
+                            <i class="glyphicon glyphicon-edit icon-white"></i>
+                        </button>
+                        <button class="btn btn-default" title="Delete" ng-click="remove(content)">
+                            <i class="glyphicon glyphicon-trash icon-white"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div ng-show="detail">
+        <form id="userProfile">
+            <fieldset>
+                <div class="form-group">
+                    <label for="inputUserId">Content ID</label>
+                    <input class="form-control" id="inputUserId" placeholder="Automatically generated" readonly="true" ng-model="editContent.id">
+                </div>
+                <div class="form-group">
+                    <label for="inputTitle">Title</label>
+                    <input class="form-control" id="inputTitle" placeholder="Title" required="true" ng-model="editContent.title">
+                </div>
+                <div id="inputBody"/>
+                <div class="form-group">
+                    <label for="inputStatus">Status</label>
+                    <select class="form-control" id="inputStatus" ng-model="editContent.status" ng-value="'approved'">
+                        <option>approved</option>
+                        <option>draft</option>
+                    </select>
+                </div>
+            </fieldset>
+            <button type="submit" class="btn btn-primary" ng-click="save()">Save</button>
+            <button class="btn btn-default" ng-click="cancel()">Cancel</button>
+        </form>
+    </div>
+</div>

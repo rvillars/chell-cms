@@ -1,0 +1,9 @@
+<div class="webcontent">
+    <a visibility-role-id="101" class="btn btn-xs" id="webcontent-edit-button" ng-hide="editor" ng-click="edit()" style="float: right;"><i class="glyphicon glyphicon-edit"></i></a>
+    <div ng-bind-html="toTrusted(content.body)"></div>
+    <button class="btn btn-primary" ng-show="editor" ng-click="save()"><i style="padding-right: 10px" class="glyphicon glyphicon-check"></i>Save</button>
+</div>
+
+
+
+

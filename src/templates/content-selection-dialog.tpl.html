@@ -1,0 +1,33 @@
+<div class="modal-header">
+    <button class="close" ng-click="cancel()">×</button>
+    <h3>Select Content</h3>
+</div>
+<div class="modal-body" ng-controller="ContentManagerController">
+    <table ng-table="tableParams" cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="datatable">
+        <tbody>
+        <tr ng-repeat="content in data"
+            ng-click="content.$selected = !content.$selected; changeSelection(content)"
+            ng-class="{'active': content.$selected}">
+            <td data-title="'Title'">{{content.title}}</td>
+            <td data-title="'Creation Date'" class="center">{{content.creationDate | date:'dd.MM.yyyy'}}</td>
+            <td data-title="'Content ID'" class="center">{{content.id}}</td>
+            <td data-title="'Access Rights'" class="center">{{content.accessRights}}</td>
+            <td data-title="'State'" class="center">
+                <span class="badge">{{content.status}}</span>
+            </td>
+            <td data-title="'Actions'" class="center">
+                <div class="btn-group btn-group-sm">
+                    <button class="btn btn-default" title="View" ng-click="view(content)">
+                        <i class="glyphicon glyphicon-zoom-in icon-white"></i>
+                    </button>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="modal-footer">
+    <button class="btn" ng-click="cancel()">Cancel</button>
+    <button class="btn btn-primary" ng-click="ok()">Save</button>
+</div>
+

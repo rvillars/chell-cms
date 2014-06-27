@@ -101,14 +101,10 @@ var cmsToExternalContent = function(cmsContent) {
 };
 
 // *** Mock Backend ***
-chellCms.run(function($httpBackend, $base64) {
+chellCms.run(function($httpBackend) {
 
     var authenticated = function(headers) {
-        if (headers.Authorization == 'Basic '+$base64.encode('chellAdmin'+':'+'chellAdmin') ||
-            headers.Authorization == 'Basic '+$base64.encode('chellUser'+':'+'chellUser')) {
-            return true;
-        }
-        return false;
+        return true;
     };
 
     // --- Content ---

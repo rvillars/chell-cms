@@ -106,13 +106,9 @@ var cmsToExternalContent = function (cmsContent) {
 };
 chellCms.run([
   '$httpBackend',
-  '$base64',
-  function ($httpBackend, $base64) {
+  function ($httpBackend) {
     var authenticated = function (headers) {
-      if (headers.Authorization == 'Basic ' + $base64.encode('chellAdmin' + ':' + 'chellAdmin') || headers.Authorization == 'Basic ' + $base64.encode('chellUser' + ':' + 'chellUser')) {
-        return true;
-      }
-      return false;
+      return true;
     };
     $httpBackend.whenGET(/cms\/content\/[\d]/).respond(function (method, url, data, headers) {
       if (authenticated(headers)) {

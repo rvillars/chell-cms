@@ -6,7 +6,6 @@ var chellCms = angular.module('chell-cms', [
     'underscore',
     'angular-underscore',
     'ui.bootstrap',
-    'base64',
     'ngMockE2E'
   ]);;// Source: build/models.js
 var chellCms = angular.module('chell-cms');
@@ -37,6 +36,7 @@ chellCms.directive('chellWebContent', function () {
   return {
     restrict: 'E',
     controller: 'WebContentController',
+    scope: {},
     templateUrl: 'templates/web-content.tpl.html'
   };
 });

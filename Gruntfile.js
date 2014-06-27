@@ -164,4 +164,17 @@ module.exports = function (grunt) {
     grunt.registerTask('build', ['jshint', 'ngmin', 'html2js:build', 'concat', 'uglify:src', 'copy', 'less:build']);
     grunt.registerTask('default', ['watch:hint']);
 
+    grunt.registerTask('example', 'Process example .html template', function () {
+        grunt.file.copy('src/examples/example1.html', 'examples/example1.html', {
+            process: function (contents, path) {
+                return grunt.template.process(contents, {
+                    data: {
+                        scripts: userConfig.module_dependencies
+                    }
+                });
+            }
+        });
+        grunt.file.copy('src/examples/example1.js', 'examples/example1.js');
+    });
+
 };

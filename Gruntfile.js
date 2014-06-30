@@ -106,6 +106,9 @@ module.exports = function (grunt) {
             }
         },
         uglify: {
+            options: {
+                sourceMap: true
+            },
             src: {
                 files: {
                     '<%= pkg.name %>.min.js': ['<%= pkg.name %>.js']

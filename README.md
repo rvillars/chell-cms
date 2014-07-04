@@ -1,4 +1,4 @@
-chell-cms
+chell-cms [![Build Status](https://travis-ci.org/mimacom/chell-cms.svg?branch=master)](https://travis-ci.org/mimacom/chell-cms)
 =========
 Installation/Build
 ------------------

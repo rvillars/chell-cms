@@ -12,6 +12,8 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-html2js');
     grunt.loadNpmTasks('grunt-ngmin');
     grunt.loadNpmTasks('grunt-karma');
+    grunt.loadNpmTasks('grunt-angular-translate');
+    grunt.loadNpmTasks('grunt-json-angular-translate');
 
     /**
      * Load in our build configuration file.
@@ -155,6 +157,33 @@ module.exports = function (grunt) {
                 dest: 'build/templates.js'
             }
         },
+        i18nextract: {
+            default_options: {
+                src: [ 'src/*.js', 'src/templates/**/*.tpl.html' ],
+                lang: ['en'],
+                prefix: 'locale-',
+                dest: 'src/i18n',
+                namespace: true,
+                nullEmpty: true,
+                safeMode: true
+            }
+        },
+        jsonAngularTranslate: {
+            jobName: {
+                options: {
+                    moduleName: 'translations'
+                },
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'src/i18n',
+                        src: '*.json',
+                        dest: 'build',
+                        ext: '.js'
+                    }
+                ]
+            }
+        },
         watch: {
             hint: {
                 files: ['src/**/*'],
@@ -165,9 +194,10 @@ module.exports = function (grunt) {
             unit: {
                 options: {
                     files: [
-                        '<%= module_dependencies %>',
+                        '<%= module_dependencies.js %>',
                         '<%= pkg.name %>.js',
-                        'adapters/MockCmsAdapter.js',
+                        'adapters/SlingCmsAdapter.js',
+                        'adapters/SlingCmsMock.js',
                         'tests/*.js'
                     ],
                     frameworks: [
@@ -184,7 +214,7 @@ module.exports = function (grunt) {
 
     grunt.initConfig(grunt.util._.extend(taskConfig, userConfig));
 
-    grunt.registerTask('build', ['jshint', 'ngmin', 'html2js:build', 'concat', 'uglify:src', 'copy', 'less:build']);
+    grunt.registerTask('build', ['jshint', 'ngmin', 'html2js:build', 'i18nextract', 'jsonAngularTranslate', 'concat', 'uglify:src', 'copy', 'less:build', 'example']);
     grunt.registerTask('default', ['watch:hint']);
 
     grunt.registerTask('example', 'Process example .html template', function () {
@@ -192,7 +222,8 @@ module.exports = function (grunt) {
             process: function (contents, path) {
                 return grunt.template.process(contents, {
                     data: {
-                        scripts: userConfig.module_dependencies
+                        scripts: userConfig.module_dependencies.js,
+                        styles: userConfig.module_dependencies.css
                     }
                 });
             }

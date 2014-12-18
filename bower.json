@@ -2,10 +2,10 @@
     "name": "chell-cms",
     "version": "0.0.1",
     "main": [
-       "chell-cms.js"
+        "chell-cms.js",
+        "styles/chell-cms.css"
     ],
-    "dependencies": {},
-    "devDependencies": {
+    "dependencies": {
         "angular": "~1.2",
         "angular-resource": "~1.2",
         "angular-mocks": "~1.2",
@@ -15,6 +15,21 @@
         "underscore": "~1.6",
         "angular-underscore-module": "",
         "angular-underscore": "",
+        "angular-translate": "~2.2.0",
         "ckeditor": ""
-    }
+    },
+    "devDependencies": {},
+    "ignore": [
+        "assets",
+        "build",
+        "src",
+        "tests",
+        "examples",
+        ".travis.yml",
+        ".gitignore",
+        ".bowerrc",
+        "build.config.js",
+        "Gruntfile.js",
+        "package.json"
+    ]
 }

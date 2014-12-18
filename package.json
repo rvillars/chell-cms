@@ -18,7 +18,9 @@
         "karma-jasmine": "^0.1.5",
         "phantomjs": "~1.9",
         "karma-phantomjs-launcher": "^0.1.4",
-        "grunt-karma": "~0.8.3"
+        "grunt-karma": "~0.8.3",
+        "grunt-angular-translate": "~0.2.13",
+        "public": "git+https://git@github.com/rvillars/grunt-json-angular-translate.git"
     },
     "private": true
 }

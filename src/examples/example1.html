@@ -4,22 +4,34 @@
     <meta charset="UTF-8">
     <title>chell-cms Example 1</title>
 
+    <!-- compiled CSS --><% styles.forEach( function ( file ) { %>
+    <link rel="stylesheet" type="text/css" href="../<%= file %>" /><% }); %>
+
     <!-- compiled JavaScript --><% scripts.forEach( function ( file ) { %>
     <script type="text/javascript" src="../<%= file %>"></script><% }); %>
 
     <script type="text/javascript" src="../chell-cms.js"></script>
-    <script type="text/javascript" src="../adapters/MockCmsAdapter.js"></script>
+    <script type="text/javascript" src="../adapters/SlingCmsAdapter.js"></script>
+    <script type="text/javascript" src="../adapters/SlingCmsMock.js"></script>
     <script type="text/javascript" src="example1.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="../bower-components/bootstrap/dist/css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="../styles/chell-cms.css" />
 
 </head>
 <body>
 <div style="width: 928px; margin: 0 auto;">
-    <div class="col-md-12 column" id="col0">
-        <h2>Content Manager</h2>
-        <chell-content-manager/>
+
+    <div class="col-md-12 column" ng-controller="ExampleContentController">
+        <div ng-show="detail">
+            <h2>Content Form</h2>
+            <chell-content-form save-button-hook="showList()" cancel-button-hook="showList()"/>
+        </div>
+        <div ng-show="list">
+            <h2>Content List</h2>
+            <chell-content-list show-create-button="true" create-button-hook="showDetail()" edit-button-hook="showDetail()" read-only="false"/>
+        </div>
     </div>
+
     <div class="col-md-12 column" id="col1">
         <h2>Content</h2>
 

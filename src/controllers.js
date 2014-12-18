@@ -2,6 +2,123 @@
 
 var chellCms = angular.module('chell-cms');
 
+chellCms.controller('ContentListController', function ($scope, $rootScope, $filter, $modal, $translate, CmsContent, ngTableParams) {
+
+    $scope.content = [];
+
+    CmsContent.query().then(function (content) {
+        $scope.content = content;
+        $scope.tableParams = new ngTableParams({
+            page: 1,            // show first page
+            count: 10,          // count per page
+            sorting: {
+                title: 'asc'
+            }
+        }, {
+            total: $scope.content.length, // length of data
+            getData: function ($defer, params) {
+                var filteredData = params.filter() ? $filter('filter')($scope.content, params.filter()) : $scope.content;
+                var orderedData = params.sorting() ? $filter('orderBy')(filteredData, params.orderBy()) : filteredData;
+                params.total(orderedData.length); // used to update paginator
+                $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+            },
+            $scope: { $data: {}, $emit: function () {
+            } }
+        });
+    });
+
+    $scope.$on('chellCms.contentCreated', function(event) {
+        CmsContent.query().then(function (content) {
+            $scope.content = content;
+        });
+    });
+
+    $scope.$watchCollection('content', function () {
+        if ($scope.tableParams) {
+            $scope.tableParams.reload();
+        }
+    });
+
+    $scope.create = function() {
+        $scope.createButtonHook();
+    };
+
+    $scope.view = function (content) {
+        $scope.modalInstance = $modal.open({
+            templateUrl: 'templates/content-view-dialog.tpl.html',
+            backdrop: false,
+            controller: 'ContentViewModalController',
+            windowClass: 'modal-wide',
+            resolve: {
+                content: function () {
+                    return content;
+                }
+            }
+        });
+        $scope.viewButtonHook();
+    };
+
+    $scope.edit = function (content) {
+        $rootScope.$broadcast('chellCms.editContent', content);
+        $scope.editButtonHook();
+    };
+
+    $scope.remove = function (content) {
+        $translate('CHELL_CMS.CONTENT_LIST.REMOVE_QUESTION').then(function (removeQuestion) {
+            if (!confirm(removeQuestion)) return;
+            CmsContent.remove(content).then(function () {
+                $scope.content.splice($scope.content.indexOf(content), 1);
+            });
+            $scope.deleteButtonHook();
+        });
+    };
+});
+
+chellCms.controller('ContentFormController', function ($scope, $rootScope, CmsContent) {
+
+    $scope.editContent = {};
+
+    $scope.config = {};
+    $scope.editor = CKEDITOR.appendTo('inputBody', $scope.config, $scope.editContent.body);
+
+    $scope.$on('chellCms.editContent', function(event, content) {
+        $scope.editContent = content;
+
+        if ($scope.editor != null) {
+            $scope.editor.destroy();
+            $scope.editor = $scope.editor = CKEDITOR.appendTo('inputBody', $scope.config, $scope.editContent.body);
+        }
+    });
+
+    $scope.save = function () {
+        $scope.editContent.body = $scope.editor.getData();
+        var isNew = $scope.editContent.id == null;
+        if (isNew) {
+            CmsContent.create($scope.editContent);
+        } else {
+            CmsContent.update($scope.editContent);
+        }
+        $scope.cancel();
+        $rootScope.$broadcast('chellCms.contentCreated');
+        $scope.saveButtonHook();
+    };
+
+    $scope.cancel = function () {
+        $scope.editContent = {};
+
+        if ($scope.editor != null) {
+            $scope.editor.destroy();
+            $scope.editor = $scope.editor = CKEDITOR.appendTo('inputBody', $scope.config, $scope.editContent.body);
+        }
+
+        if ($scope.contentForm) {
+            $scope.contentForm.$setPristine();
+        }
+
+        $scope.cancelButtonHook();
+    };
+});
+
 chellCms.controller('WebContentController', function ($scope, $sce, $modal, $attrs, CmsContent) {
 
     $scope.contentId = $scope.$eval($attrs.contentId);
@@ -42,114 +159,7 @@ chellCms.controller('WebContentController', function ($scope, $sce, $modal, $att
     };
 });
 
-chellCms.controller('ContentManagerController', function ($scope, ngTableParams, CmsContent, $modal) {
-
-    $scope.list = true;
-    $scope.detail = false;
-
-    $scope.contentList = [];
-    $scope.editContent = {};
-
-    $scope.editor = null;
-    $scope.config = {};
-
-    $scope.$watchCollection('contentList', function () {
-        if ($scope.tableParams) {
-            $scope.tableParams.reload();
-        }
-    });
-
-    CmsContent.query().then(function (contentList) {
-        $scope.contentList = contentList;
-        $scope.tableParams = new ngTableParams({
-            page: 1,            // show first page
-            count: 10           // count per page
-        }, {
-            total: $scope.contentList.length, // length of data
-            getData: function ($defer, params) {
-                $defer.resolve($scope.data = $scope.contentList.slice((params.page() - 1) * params.count(), params.page() * params.count()));
-            },
-            $scope: { $data: {}, $emit: function(){} }
-        });
-    });
-
-    $scope.create = function () {
-        $scope.edit({});
-    };
-
-    $scope.view = function (content) {
-        $scope.modalInstance = $modal.open({
-            templateUrl: 'templates/content-view-dialog.tpl.html',
-            backdrop: 'false',
-            keyboard: 'true',
-            controller: 'CmsViewModalController',
-            windowClass: 'modal-wide',
-            resolve: {
-                content: function () {
-                    return content;
-                }
-            }
-        });
-    };
-
-    $scope.edit = function (content) {
-        $scope.editContent = content;
-
-        if ($scope.editor) return;
-        $scope.editor = CKEDITOR.appendTo('inputBody', $scope.config, $scope.editContent.body);
-
-        $scope.showDetail();
-    };
-
-    $scope.remove = function (content) {
-        if (!confirm('Are you sure?')) return;
-        CmsContent.remove(content).then(function () {
-            $scope.contentList.splice($scope.contentList.indexOf(content), 1);
-        });
-    };
-
-    $scope.save = function () {
-        $scope.editContent.body = $scope.editor.getData();
-        var isNew = $scope.editContent.id == null;
-        if (isNew) {
-            CmsContent.create($scope.editContent).then(function(content) {
-                $scope.contentList.push(content);
-            });
-        } else {
-            CmsContent.update($scope.editContent).then(function(content) {});
-        }
-
-        if ($scope.editor != null) {
-            $scope.editor.destroy();
-            $scope.editor = null;
-        }
-
-        $scope.cancel();
-    };
-
-    $scope.cancel = function () {
-        $scope.editContent = {};
-
-        if ($scope.editor != null) {
-            $scope.editor.destroy();
-            $scope.editor = null;
-        }
-
-        $scope.showList();
-    };
-
-    $scope.showList = function () {
-        $scope.list = true;
-        $scope.detail = false;
-    };
-
-    $scope.showDetail = function () {
-        $scope.list = false;
-        $scope.detail = true;
-    };
-});
-
-chellCms.controller('CmsViewModalController', function ($scope, $modalInstance, $sce, content) {
+chellCms.controller('ContentViewModalController', function ($scope, $modalInstance, $sce, content) {
 
     $scope.content = content;
 

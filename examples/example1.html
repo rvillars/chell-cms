@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <title>chell-cms Example 1</title>
 
+    <!-- compiled CSS -->
+    <link rel="stylesheet" type="text/css" href="../bower-components/ng-table/ng-table.css" />
+    <link rel="stylesheet" type="text/css" href="../bower-components/bootstrap/dist/css/bootstrap.css" />
+
     <!-- compiled JavaScript -->
     <script type="text/javascript" src="../bower-components/angular/angular.js"></script>
     <script type="text/javascript" src="../bower-components/angular-resource/angular-resource.js"></script>
@@ -12,23 +16,33 @@
     <script type="text/javascript" src="../bower-components/underscore/underscore.js"></script>
     <script type="text/javascript" src="../bower-components/angular-underscore-module/angular-underscore-module.js"></script>
     <script type="text/javascript" src="../bower-components/angular-underscore/angular-underscore.js"></script>
+    <script type="text/javascript" src="../bower-components/angular-translate/angular-translate.js"></script>
     <script type="text/javascript" src="../bower-components/ng-table/ng-table.js"></script>
     <script type="text/javascript" src="../bower-components/ckeditor/ckeditor.js"></script>
     <script type="text/javascript" src="../bower-components/ckeditor/adapters/jquery.js"></script>
 
     <script type="text/javascript" src="../chell-cms.js"></script>
-    <script type="text/javascript" src="../adapters/MockCmsAdapter.js"></script>
+    <script type="text/javascript" src="../adapters/SlingCmsAdapter.js"></script>
+    <script type="text/javascript" src="../adapters/SlingCmsMock.js"></script>
     <script type="text/javascript" src="example1.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="../bower-components/bootstrap/dist/css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="../styles/chell-cms.css" />
 
 </head>
 <body>
 <div style="width: 928px; margin: 0 auto;">
-    <div class="col-md-12 column" id="col0">
-        <h2>Content Manager</h2>
-        <chell-content-manager/>
+
+    <div class="col-md-12 column" ng-controller="ExampleContentController">
+        <div ng-show="detail">
+            <h2>Content Form</h2>
+            <chell-content-form save-button-hook="showList()" cancel-button-hook="showList()"/>
+        </div>
+        <div ng-show="list">
+            <h2>Content List</h2>
+            <chell-content-list show-create-button="true" create-button-hook="showDetail()" edit-button-hook="showDetail()" read-only="false"/>
+        </div>
     </div>
+
     <div class="col-md-12 column" id="col1">
         <h2>Content</h2>
 

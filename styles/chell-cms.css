@@ -4,3 +4,7 @@
 .webcontent:hover #webcontent-edit-button {
   opacity: 1;
 }
+.form-group.required .control-label:after {
+  content: "*";
+  color: #a94442;
+}

@@ -1,0 +1,29 @@
+{
+    "CHELL_CMS": {
+        "CONTENT_LIST": {
+            "REMOVE_QUESTION": "Are you sure?",
+            "VIEW_BUTTON": "View content",
+            "EDIT_BUTTON": "Edit content",
+            "DELETE_BUTTON": "Delete content",
+            "CREATE_CONTENT_BUTTON": "Create content",
+            "COLUMN_TITLE": {
+                "TITLE": "Title",
+                "CREATION_DATE": "Creation Date",
+                "CONTENT_ID": "Content ID",
+                "ACCESS_RIGHTS": "Access Rights",
+                "STATUS": "Status",
+                "ACTIONS": "Actions"
+            }
+        },
+        "CONTENT_FORM": {
+            "TITLE": "Title",
+            "PH_TITLE": "Title",
+            "ERROR_TITLE": "A content title is required",
+            "CONTENT_ID": "Content ID",
+            "PH_GENERATED": "Generated",
+            "STATUS": "Status",
+            "SAVE_BUTTON": "Save",
+            "CANCEL_BUTTON": "Cancel"
+        }
+    }
+}

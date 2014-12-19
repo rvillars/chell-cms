@@ -176,7 +176,6 @@ chellCms.controller('CmsSelectionModalController', function ($scope, $modalInsta
 
     $scope.selectedRow = content;
     $scope.contentId = content.id;
-    $scope.selectedRow.$selected = true;
 
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
@@ -187,10 +186,16 @@ chellCms.controller('CmsSelectionModalController', function ($scope, $modalInsta
     };
 
     $scope.changeSelection = function(content) {
-        if ($scope.selectedRow) {
-            $scope.selectedRow.$selected = false;
+
+        // unselect on second click
+        if ($scope.selectedRow == content) {
+            $scope.selectedRow = null;
+            $scope.contentId = null;
+            return;
         }
-        $scope.selectedRow=content;
+
+        // select new
+        $scope.selectedRow = content;
         $scope.contentId = content.id;
     };
 });

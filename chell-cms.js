@@ -288,7 +288,6 @@ chellCms.controller('CmsSelectionModalController', [
   function ($scope, $modalInstance, content) {
     $scope.selectedRow = content;
     $scope.contentId = content.id;
-    $scope.selectedRow.$selected = true;
     $scope.cancel = function () {
       $modalInstance.dismiss('cancel');
     };
@@ -296,8 +295,10 @@ chellCms.controller('CmsSelectionModalController', [
       $modalInstance.close($scope.contentId);
     };
     $scope.changeSelection = function (content) {
-      if ($scope.selectedRow) {
-        $scope.selectedRow.$selected = false;
+      if ($scope.selectedRow == content) {
+        $scope.selectedRow = null;
+        $scope.contentId = null;
+        return;
       }
       $scope.selectedRow = content;
       $scope.contentId = content.id;
@@ -342,7 +343,6 @@ angular.module("templates/content-form.tpl.html", []).run(["$templateCache", fun
 angular.module("templates/content-list.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("templates/content-list.tpl.html",
     "<div>\n" +
-    "\n" +
     "    <table ng-table=\"tableParams\" show-filter=\"true\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" template-pagination=\"custom/pager/content\" class=\"table table-striped table-bordered\"\n" +
     "           id=\"contentDatatable\">\n" +
     "        <tbody>\n" +
@@ -408,33 +408,63 @@ angular.module("templates/content-selection-dialog.tpl.html", []).run(["$templat
     "    <button class=\"close\" ng-click=\"cancel()\">×</button>\n" +
     "    <h3>Select Content</h3>\n" +
     "</div>\n" +
-    "<div class=\"modal-body\" ng-controller=\"ContentManagerController\">\n" +
-    "    <table ng-table=\"tableParams\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" class=\"table table-striped table-bordered\" id=\"datatable\">\n" +
+    "<div class=\"modal-body\" ng-controller=\"ContentListController\">\n" +
+    "    <table ng-table=\"tableParams\" show-filter=\"true\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" template-pagination=\"custom/pager/content\" class=\"table table-striped table-bordered\"\n" +
+    "           id=\"contentDatatable\">\n" +
     "        <tbody>\n" +
-    "        <tr ng-repeat=\"content in data\"\n" +
-    "            ng-click=\"content.$selected = !content.$selected; changeSelection(content)\"\n" +
-    "            ng-class=\"{'active': content.$selected}\">\n" +
-    "            <td data-title=\"'Title'\">{{content.title}}</td>\n" +
-    "            <td data-title=\"'Creation Date'\" class=\"center\">{{content.creationDate | date:'dd.MM.yyyy'}}</td>\n" +
-    "            <td data-title=\"'Content ID'\" class=\"center\">{{content.id}}</td>\n" +
-    "            <td data-title=\"'Access Rights'\" class=\"center\">{{content.accessRights}}</td>\n" +
-    "            <td data-title=\"'State'\" class=\"center\">\n" +
-    "                <span class=\"badge\">{{content.status}}</span>\n" +
+    "        <tr ng-repeat=\"content in $data\"\n" +
+    "            ng-click=\"changeSelection(content)\"\n" +
+    "            ng-class=\"{'active': content.id === contentId}\">\n" +
+    "            <td data-title=\"'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.TITLE' | translate\" filter=\"{'title': 'text'}\" sortable=\"'title'\" ng-bind=\"content.title\"></td>\n" +
+    "            <td data-title=\"'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.CREATION_DATE' | translate\" sortable=\"'creationDate'\" ng-bind=\"content.creationDate | date:'dd.MM.yyyy'\"></td>\n" +
+    "            <td data-title=\"'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.CONTENT_ID' | translate\" sortable=\"'id'\" ng-bind=\"content.id\"></td>\n" +
+    "            <td data-title=\"'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.ACCESS_RIGHTS' | translate\" sortable=\"'accessRights'\" ng-bind=\"content.accessRights\"></td>\n" +
+    "            <td data-title=\"'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.STATUS' | translate\" sortable=\"'status'\" class=\"center\">\n" +
+    "                <span class=\"badge\" ng-bind=\"content.status\"/>\n" +
     "            </td>\n" +
-    "            <td data-title=\"'Actions'\" class=\"center\">\n" +
+    "            <td data-title=\"'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.ACTIONS' | translate\" class=\"center\">\n" +
     "                <div class=\"btn-group btn-group-sm\">\n" +
-    "                    <button class=\"btn btn-default\" title=\"View\" ng-click=\"view(content)\">\n" +
+    "                    <a class=\"btn btn-default\" rel=\"tooltip\" title=\"{{'CHELL_CMS.CONTENT_LIST.VIEW_BUTTON' | translate}}\" ng-click=\"view(content)\">\n" +
     "                        <i class=\"glyphicon glyphicon-zoom-in icon-white\"></i>\n" +
-    "                    </button>\n" +
+    "                    </a>\n" +
     "                </div>\n" +
     "            </td>\n" +
     "        </tr>\n" +
     "        </tbody>\n" +
     "    </table>\n" +
+    "    <script type=\"text/ng-template\" id=\"custom/pager/content\">\n" +
+    "        <div class=\"row\">\n" +
+    "            <div class=\"col-md-4\">\n" +
+    "                <button class=\"btn btn-default\" ng-show=\"$parent.$parent.showCreateButton && !$parent.$parent.readOnly()\" ng-click=\"$parent.$parent.create()\"><i style=\"padding-right: 10px\" class=\"glyphicon glyphicon-edit\"></i>{{'CHELL_CMS.CONTENT_LIST.CREATE_CONTENT_BUTTON'\n" +
+    "                    | translate}}\n" +
+    "                </button>\n" +
+    "            </div>\n" +
+    "            <div class=\"col-md-4\">\n" +
+    "                <div class=\"btn-group center-block\">\n" +
+    "                    <button class=\"btn btn-default center-block\" ng-click=\"params.page(page.number)\" ng-class=\"{'disabled': !page.active}\" ng-repeat=\"page in pages\" ng-switch=\"page.type\">\n" +
+    "                        <div ng-switch-when=\"prev\" ng-click=\"params.page(page.number)\">&laquo;</div>\n" +
+    "                        <div ng-switch-when=\"first\" ng-click=\"params.page(page.number)\"><span ng-bind=\"page.number\"></span></div>\n" +
+    "                        <div ng-switch-when=\"page\" ng-click=\"params.page(page.number)\"><span ng-bind=\"page.number\"></span></div>\n" +
+    "                        <div ng-switch-when=\"more\" ng-click=\"params.page(page.number)\">&#8230;</div>\n" +
+    "                        <div ng-switch-when=\"last\" ng-click=\"params.page(page.number)\"><span ng-bind=\"page.number\"></span></div>\n" +
+    "                        <div ng-switch-when=\"next\" ng-click=\"params.page(page.number)\">&raquo;</div>\n" +
+    "                    </button>\n" +
+    "                </div>\n" +
+    "            </div>\n" +
+    "            <div class=\"col-md-4\">\n" +
+    "                <div ng-if=\"params.settings().counts.length\" class=\"ng-table-counts btn-group pull-right\">\n" +
+    "                    <button type=\"button\" ng-class=\"{'active':params.count() == 10}\" ng-click=\"params.count(10)\" class=\"btn btn-default\">10</button>\n" +
+    "                    <button type=\"button\" ng-class=\"{'active':params.count() == 25}\" ng-click=\"params.count(25)\" class=\"btn btn-default\">25</button>\n" +
+    "                    <button type=\"button\" ng-class=\"{'active':params.count() == 50}\" ng-click=\"params.count(50)\" class=\"btn btn-default\">50</button>\n" +
+    "                    <button type=\"button\" ng-class=\"{'active':params.count() == 100}\" ng-click=\"params.count(100)\" class=\"btn btn-default\">100</button>\n" +
+    "                </div>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
+    "    </script>\n" +
     "</div>\n" +
     "<div class=\"modal-footer\">\n" +
     "    <button class=\"btn\" ng-click=\"cancel()\">Cancel</button>\n" +
-    "    <button class=\"btn btn-primary\" ng-click=\"ok()\">Save</button>\n" +
+    "    <button class=\"btn btn-primary\" ng-click=\"ok()\" ng-disabled=\"!contentId\">Save</button>\n" +
     "</div>\n" +
     "\n" +
     "");

@@ -1,7 +1,8 @@
 <div class="webcontent">
-    <a visibility-role-id="101" class="btn btn-xs" id="webcontent-edit-button" ng-hide="editor" ng-click="edit()" style="float: right;"><i class="glyphicon glyphicon-edit"></i></a>
-    <div ng-bind-html="toTrusted(content.body)"></div>
-    <button class="btn btn-primary" ng-show="editor" ng-click="save()"><i style="padding-right: 10px" class="glyphicon glyphicon-check"></i>Save</button>
+    <div ng-bind-html="toTrusted(content.body)" class="content"></div>
+    <a class="btn btn-xs webcontent-button" id="webcontent-select-button" ng-click="select()"><i class="glyphicon glyphicon-check"></i></a>
+    <a class="btn btn-xs webcontent-button" id="webcontent-edit-button" ng-hide="empty" ng-click="edit()" ><i class="glyphicon glyphicon-edit"></i></a>
+    <a class="btn btn-xs webcontent-button" id="webcontent-inline-button" ng-hide="empty" ng-click="inline()" ><i class="glyphicon glyphicon-pencil"></i></a>
 </div>
 
 

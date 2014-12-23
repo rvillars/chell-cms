@@ -1,8 +1,17 @@
-.webcontent > #webcontent-edit-button {
+.webcontent > .webcontent-button {
   opacity: 0;
 }
-.webcontent:hover #webcontent-edit-button {
+.webcontent:hover .webcontent-button {
   opacity: 1;
+}
+.webcontent-button {
+  z-index: 10001;
+}
+.webcontent.empty {
+  height: 25px;
+}
+.webcontent.empty:hover {
+  border: 1px solid #ddd;
 }
 .form-group.required .control-label:after {
   content: "*";
@@ -10,6 +19,12 @@
 }
 .modal-wide .modal-dialog {
   width: 800px;
+}
+[contenteditable="true"] {
+  z-index: 9000;
+}
+[contenteditable="true"]:hover {
+  z-index: 9000;
 }
 .table > thead > tr > td.active,
 .table > tbody > tr > td.active,

@@ -35,6 +35,25 @@ chellCms.directive('chellWebContent', function () {
         restrict: 'E',
         controller: 'WebContentController',
         scope: {}, // This is needed so each instance has its own scope
-        templateUrl: 'templates/web-content.tpl.html'
+        templateUrl: 'templates/web-content.tpl.html',
+        link: function (scope, element, attrs) {
+            scope.$watch('empty', function() {
+                if (scope.empty) {
+                    element.children('.webcontent').addClass('empty');
+                } else {
+                    element.children('.webcontent').removeClass('empty');
+                }
+            });
+            scope.inline = function() {
+                if (scope.editor) {
+                    scope.editor.destroy();
+                    scope.editor = null;
+                    element.find('.content').removeAttr('contenteditable');
+                } else {
+                    element.find('.content').attr('contenteditable', 'true');
+                    scope.editor = CKEDITOR.inline(element.find('.content')[0], {startupFocus: true});
+                }
+            };
+        }
     };
 });

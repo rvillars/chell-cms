@@ -20,7 +20,7 @@ angular.module('translations').config(['$translateProvider',
             'TITLE': 'Title',
             'CREATION_DATE': 'Creation Date',
             'CONTENT_ID': 'Content ID',
-            'ACCESS_RIGHTS': 'Access Rights',
+            'ACCESS_RIGHTS': 'Created by',
             'STATUS': 'Status',
             'ACTIONS': 'Actions'
           }
@@ -34,6 +34,10 @@ angular.module('translations').config(['$translateProvider',
           'STATUS': 'Status',
           'SAVE_BUTTON': 'Save',
           'CANCEL_BUTTON': 'Cancel'
+        },
+        'CONTENT_SELECTION': {
+          'CANCEL_BUTTON': 'Cancel',
+          'SELECT_BUTTON': 'Select'
         }
       }
     });
@@ -44,6 +48,7 @@ angular.module('translations').config(['$translateProvider',
 var chellCms = angular.module('chell-cms', [
     'templates-chell-cms',
     'ngTable',
+    'ngCkeditor',
     'underscore',
     'angular-underscore',
     'ui.bootstrap',
@@ -105,7 +110,26 @@ chellCms.directive('chellWebContent', function () {
     restrict: 'E',
     controller: 'WebContentController',
     scope: {},
-    templateUrl: 'templates/web-content.tpl.html'
+    templateUrl: 'templates/web-content.tpl.html',
+    link: function (scope, element, attrs) {
+      scope.$watch('empty', function () {
+        if (scope.empty) {
+          element.children('.webcontent').addClass('empty');
+        } else {
+          element.children('.webcontent').removeClass('empty');
+        }
+      });
+      scope.inline = function () {
+        if (scope.editor) {
+          scope.editor.destroy();
+          scope.editor = null;
+          element.find('.content').removeAttr('contenteditable');
+        } else {
+          element.find('.content').attr('contenteditable', 'true');
+          scope.editor = CKEDITOR.inline(element.find('.content')[0], { startupFocus: true });
+        }
+      };
+    }
   };
 });;// Source: build/controllers.js
 var chellCms = angular.module('chell-cms');
@@ -189,33 +213,28 @@ chellCms.controller('ContentFormController', [
   'CmsContent',
   function ($scope, $rootScope, CmsContent) {
     $scope.editContent = {};
-    $scope.config = {};
-    $scope.editor = CKEDITOR.appendTo('inputBody', $scope.config, $scope.editContent.body);
+    $scope.editorConfig = { extraPlugins: 'divarea' };
     $scope.$on('chellCms.editContent', function (event, content) {
       $scope.editContent = content;
-      if ($scope.editor != null) {
-        $scope.editor.destroy();
-        $scope.editor = $scope.editor = CKEDITOR.appendTo('inputBody', $scope.config, $scope.editContent.body);
-      }
     });
     $scope.save = function () {
-      $scope.editContent.body = $scope.editor.getData();
       var isNew = $scope.editContent.id == null;
       if (isNew) {
-        CmsContent.create($scope.editContent);
+        CmsContent.create($scope.editContent).then(function () {
+          $rootScope.$broadcast('chellCms.contentCreated');
+          $scope.cancel();
+          $scope.saveButtonHook();
+        });
       } else {
-        CmsContent.update($scope.editContent);
+        CmsContent.update($scope.editContent).then(function () {
+          $rootScope.$broadcast('chellCms.contentCreated');
+          $scope.cancel();
+          $scope.saveButtonHook();
+        });
       }
-      $scope.cancel();
-      $rootScope.$broadcast('chellCms.contentCreated');
-      $scope.saveButtonHook();
     };
     $scope.cancel = function () {
       $scope.editContent = {};
-      if ($scope.editor != null) {
-        $scope.editor.destroy();
-        $scope.editor = $scope.editor = CKEDITOR.appendTo('inputBody', $scope.config, $scope.editContent.body);
-      }
       if ($scope.contentForm) {
         $scope.contentForm.$setPristine();
       }
@@ -225,21 +244,27 @@ chellCms.controller('ContentFormController', [
 ]);
 chellCms.controller('WebContentController', [
   '$scope',
+  '$rootScope',
   '$sce',
   '$modal',
   '$attrs',
   'CmsContent',
-  function ($scope, $sce, $modal, $attrs, CmsContent) {
-    $scope.contentId = $scope.$eval($attrs.contentId);
-    CmsContent.get($scope.contentId).then(function (content) {
-      $scope.content = content;
-    });
-    $scope.edit = function () {
+  function ($scope, $rootScope, $sce, $modal, $attrs, CmsContent) {
+    $scope.contentId = $attrs.contentId;
+    $scope.empty = true;
+    $scope.editorConfig = { extraPlugins: 'divarea' };
+    if ($scope.contentId != null) {
+      CmsContent.get($scope.contentId).then(function (content) {
+        $scope.content = content;
+        $scope.empty = false;
+      });
+    }
+    $scope.select = function () {
       $scope.modalInstance = $modal.open({
         templateUrl: 'templates/content-selection-dialog.tpl.html',
         backdrop: 'false',
         keyboard: 'true',
-        controller: 'CmsSelectionModalController',
+        controller: 'ContentSelectionModalController',
         windowClass: 'modal-wide',
         resolve: {
           content: function () {
@@ -251,15 +276,29 @@ chellCms.controller('WebContentController', [
         $scope.contentId = contentId;
         CmsContent.get($scope.contentId).then(function (content) {
           $scope.content = content;
+          $scope.empty = false;
         });
       });
     };
-    $scope.save = function () {
-      if (!$scope.editor)
-        return;
-      $scope.content = $scope.editor.getData();
-      $scope.editor.destroy();
-      $scope.editor = null;
+    $scope.edit = function () {
+      $scope.modalInstance = $modal.open({
+        templateUrl: 'templates/content-edit-dialog.tpl.html',
+        backdrop: 'false',
+        keyboard: 'true',
+        controller: 'ContentEditModalController',
+        windowClass: 'modal-wide',
+        resolve: {
+          content: function () {
+            return $scope.content;
+          }
+        }
+      });
+      $scope.modalInstance.result.then(function (content) {
+        $scope.content = content;
+        CmsContent.update($scope.content).then(function () {
+          $rootScope.$broadcast('chellCms.contentCreated');
+        });
+      });
     };
     $scope.toTrusted = function (htmlCode) {
       return $sce.trustAsHtml(htmlCode);
@@ -281,13 +320,15 @@ chellCms.controller('ContentViewModalController', [
     };
   }
 ]);
-chellCms.controller('CmsSelectionModalController', [
+chellCms.controller('ContentSelectionModalController', [
   '$scope',
   '$modalInstance',
   'content',
   function ($scope, $modalInstance, content) {
-    $scope.selectedRow = content;
-    $scope.contentId = content.id;
+    if (content != null) {
+      $scope.selectedRow = content;
+      $scope.contentId = content.id;
+    }
     $scope.cancel = function () {
       $modalInstance.dismiss('cancel');
     };
@@ -304,8 +345,65 @@ chellCms.controller('CmsSelectionModalController', [
       $scope.contentId = content.id;
     };
   }
+]);
+chellCms.controller('ContentEditModalController', [
+  '$scope',
+  '$modalInstance',
+  'content',
+  function ($scope, $modalInstance, content) {
+    $scope.editContent = content;
+    $scope.editorConfig = { extraPlugins: 'divarea' };
+    $scope.cancel = function () {
+      $modalInstance.dismiss('cancel');
+    };
+    $scope.save = function () {
+      $modalInstance.close($scope.editContent);
+    };
+  }
 ]);;// Source: build/templates.js
-angular.module('templates-chell-cms', ['templates/content-form.tpl.html', 'templates/content-list.tpl.html', 'templates/content-selection-dialog.tpl.html', 'templates/content-view-dialog.tpl.html', 'templates/web-content.tpl.html']);
+angular.module('templates-chell-cms', ['templates/content-edit-dialog.tpl.html', 'templates/content-form.tpl.html', 'templates/content-list.tpl.html', 'templates/content-selection-dialog.tpl.html', 'templates/content-view-dialog.tpl.html', 'templates/web-content.tpl.html']);
+
+angular.module("templates/content-edit-dialog.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("templates/content-edit-dialog.tpl.html",
+    "<div class=\"modal-header\">\n" +
+    "    <button class=\"close\" ng-click=\"cancel()\">×</button>\n" +
+    "    <h3>Select Content</h3>\n" +
+    "</div>\n" +
+    "<div class=\"modal-body\">\n" +
+    "    <form id=\"contentForm\" name=\"contentForm\" novalidate ng-submit=\"contentForm.$valid && save()\">\n" +
+    "        <fieldset>\n" +
+    "            <div class=\"row\">\n" +
+    "                <div class=\"form-group col-md-6 required\" ng-class=\"{ 'has-error' : contentForm.inputTitle.$invalid && !contentForm.inputTitle.$pristine }\">\n" +
+    "                    <label for=\"inputTitle\" class=\"control-label\">{{'CHELL_CMS.CONTENT_FORM.TITLE' | translate}}</label>\n" +
+    "                    <input class=\"form-control\" id=\"inputTitle\" name=\"inputTitle\" placeholder=\"{{'CHELL_CMS.CONTENT_FORM.PH_TITLE' | translate}}\" required\n" +
+    "                           ng-model=\"editContent.title\" autofocus/>\n" +
+    "                    <p ng-show=\"contentForm.inputTitle.$invalid && !contentForm.inputTitle.$pristine\" class=\"help-block\">{{'CHELL_CMS.CONTENT_FORM.ERROR_TITLE' | translate}}</p>\n" +
+    "                </div>\n" +
+    "                <div class=\"form-group col-md-6\">\n" +
+    "                    <label for=\"inputContentId\" class=\"control-label\">{{'CHELL_CMS.CONTENT_FORM.CONTENT_ID' | translate}}</label>\n" +
+    "                    <input class=\"form-control\" id=\"inputContentId\" placeholder=\"{{'CHELL_CMS.CONTENT_FORM.PH_GENERATED' | translate}}\" readonly=\"true\"\n" +
+    "                           ng-model=\"editContent.id\"/>\n" +
+    "                </div>\n" +
+    "            </div>\n" +
+    "            <textarea ckeditor=\"editorConfig\" ng-model=\"editContent.body\"></textarea>\n" +
+    "            <div class=\"form-group\">\n" +
+    "                <label for=\"inputStatus\">{{'CHELL_CMS.CONTENT_FORM.STATUS' | translate}}</label>\n" +
+    "                <select class=\"form-control\" id=\"inputStatus\" ng-model=\"editContent.status\" ng-value=\"'approved'\">\n" +
+    "                    <option>approved</option>\n" +
+    "                    <option>draft</option>\n" +
+    "                </select>\n" +
+    "            </div>\n" +
+    "        </fieldset>\n" +
+    "        <button type=\"submit\" class=\"btn btn-primary\" ng-disabled=\"contentForm.$invalid\">{{'CHELL_CMS.CONTENT_FORM.SAVE_BUTTON' | translate}}</button>\n" +
+    "        <button class=\"btn btn-default\" ng-click=\"cancel()\">{{'CHELL_CMS.CONTENT_FORM.CANCEL_BUTTON' | translate}}</button>\n" +
+    "    </form>\n" +
+    "</div>\n" +
+    "<div class=\"modal-footer\">\n" +
+    "\n" +
+    "</div>\n" +
+    "\n" +
+    "");
+}]);
 
 angular.module("templates/content-form.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("templates/content-form.tpl.html",
@@ -325,7 +423,7 @@ angular.module("templates/content-form.tpl.html", []).run(["$templateCache", fun
     "                           ng-model=\"editContent.id\"/>\n" +
     "                </div>\n" +
     "            </div>\n" +
-    "            <div id=\"inputBody\"></div>\n" +
+    "            <textarea ckeditor=\"editorConfig\" ng-model=\"editContent.body\"></textarea>\n" +
     "            <div class=\"form-group\">\n" +
     "                <label for=\"inputStatus\">{{'CHELL_CMS.CONTENT_FORM.STATUS' | translate}}</label>\n" +
     "                <select class=\"form-control\" id=\"inputStatus\" ng-model=\"editContent.status\" ng-value=\"'approved'\">\n" +
@@ -343,7 +441,7 @@ angular.module("templates/content-form.tpl.html", []).run(["$templateCache", fun
 angular.module("templates/content-list.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("templates/content-list.tpl.html",
     "<div>\n" +
-    "    <table ng-table=\"tableParams\" show-filter=\"true\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" template-pagination=\"custom/pager/content\" class=\"table table-striped table-bordered\"\n" +
+    "    <table ng-table=\"tableParams\" show-filter=\"true\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" template-pagination=\"chell-cms/content-list/pager\" class=\"table table-striped table-bordered\"\n" +
     "           id=\"contentDatatable\">\n" +
     "        <tbody>\n" +
     "        <tr ng-repeat=\"content in $data\">\n" +
@@ -370,7 +468,7 @@ angular.module("templates/content-list.tpl.html", []).run(["$templateCache", fun
     "        </tr>\n" +
     "        </tbody>\n" +
     "    </table>\n" +
-    "    <script type=\"text/ng-template\" id=\"custom/pager/content\">\n" +
+    "    <script type=\"text/ng-template\" id=\"chell-cms/content-list/pager\">\n" +
     "        <div class=\"row\">\n" +
     "            <div class=\"col-md-4\">\n" +
     "                <button class=\"btn btn-default\" ng-show=\"$parent.$parent.showCreateButton && !$parent.$parent.readOnly()\" ng-click=\"$parent.$parent.create()\"><i style=\"padding-right: 10px\" class=\"glyphicon glyphicon-edit\"></i>{{'CHELL_CMS.CONTENT_LIST.CREATE_CONTENT_BUTTON'\n" +
@@ -463,8 +561,8 @@ angular.module("templates/content-selection-dialog.tpl.html", []).run(["$templat
     "    </script>\n" +
     "</div>\n" +
     "<div class=\"modal-footer\">\n" +
-    "    <button class=\"btn\" ng-click=\"cancel()\">Cancel</button>\n" +
-    "    <button class=\"btn btn-primary\" ng-click=\"ok()\" ng-disabled=\"!contentId\">Save</button>\n" +
+    "    <button class=\"btn\" ng-click=\"cancel()\">{{'CHELL_CMS.CONTENT_SELECTION.CANCEL_BUTTON' | translate}}</button>\n" +
+    "    <button class=\"btn btn-primary\" ng-click=\"ok()\" ng-disabled=\"!contentId\">{{'CHELL_CMS.CONTENT_SELECTION.SELECT_BUTTON' | translate}}</button>\n" +
     "</div>\n" +
     "\n" +
     "");
@@ -489,9 +587,10 @@ angular.module("templates/content-view-dialog.tpl.html", []).run(["$templateCach
 angular.module("templates/web-content.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("templates/web-content.tpl.html",
     "<div class=\"webcontent\">\n" +
-    "    <a visibility-role-id=\"101\" class=\"btn btn-xs\" id=\"webcontent-edit-button\" ng-hide=\"editor\" ng-click=\"edit()\" style=\"float: right;\"><i class=\"glyphicon glyphicon-edit\"></i></a>\n" +
-    "    <div ng-bind-html=\"toTrusted(content.body)\"></div>\n" +
-    "    <button class=\"btn btn-primary\" ng-show=\"editor\" ng-click=\"save()\"><i style=\"padding-right: 10px\" class=\"glyphicon glyphicon-check\"></i>Save</button>\n" +
+    "    <div ng-bind-html=\"toTrusted(content.body)\" class=\"content\"></div>\n" +
+    "    <a class=\"btn btn-xs webcontent-button\" id=\"webcontent-select-button\" ng-click=\"select()\"><i class=\"glyphicon glyphicon-check\"></i></a>\n" +
+    "    <a class=\"btn btn-xs webcontent-button\" id=\"webcontent-edit-button\" ng-hide=\"empty\" ng-click=\"edit()\" ><i class=\"glyphicon glyphicon-edit\"></i></a>\n" +
+    "    <a class=\"btn btn-xs webcontent-button\" id=\"webcontent-inline-button\" ng-hide=\"empty\" ng-click=\"inline()\" ><i class=\"glyphicon glyphicon-pencil\"></i></a>\n" +
     "</div>\n" +
     "\n" +
     "\n" +

@@ -9,6 +9,7 @@
     <link rel="stylesheet" type="text/css" href="../bower-components/bootstrap/dist/css/bootstrap.css" />
 
     <!-- compiled JavaScript -->
+    <script type="text/javascript" src="../bower-components/jquery/dist/jquery.js"></script>
     <script type="text/javascript" src="../bower-components/angular/angular.js"></script>
     <script type="text/javascript" src="../bower-components/angular-resource/angular-resource.js"></script>
     <script type="text/javascript" src="../bower-components/angular-mocks/angular-mocks.js"></script>
@@ -18,12 +19,15 @@
     <script type="text/javascript" src="../bower-components/angular-underscore/angular-underscore.js"></script>
     <script type="text/javascript" src="../bower-components/angular-translate/angular-translate.js"></script>
     <script type="text/javascript" src="../bower-components/ng-table/ng-table.js"></script>
-    <script type="text/javascript" src="../bower-components/ckeditor/ckeditor.js"></script>
-    <script type="text/javascript" src="../bower-components/ckeditor/adapters/jquery.js"></script>
+    <script type="text/javascript" src="../bower-components/ng-ckeditor/libs/ckeditor/ckeditor.js"></script>
+    <script type="text/javascript" src="../bower-components/ng-ckeditor/libs/ckeditor/adapters/jquery.js"></script>
+    <script type="text/javascript" src="../bower-components/ng-ckeditor/ng-ckeditor.js"></script>
 
     <script type="text/javascript" src="../chell-cms.js"></script>
-    <script type="text/javascript" src="../adapters/SlingCmsAdapter.js"></script>
-    <script type="text/javascript" src="../adapters/SlingCmsMock.js"></script>
+    <!--<script type="text/javascript" src="../adapters/SlingCmsAdapter.js"></script>-->
+    <script type="text/javascript" src="../adapters/ElasticSearchCmsAdapter.js"></script>
+    <!--<script type="text/javascript" src="../adapters/MockCmsAdapter.js"></script>-->
+    <!--<script type="text/javascript" src="../adapters/MockCmsMock.js"></script>-->
     <script type="text/javascript" src="example1.js"></script>
 
     <link rel="stylesheet" type="text/css" href="../styles/chell-cms.css" />
@@ -47,17 +51,17 @@
         <h2>Content</h2>
 
         <div>
-            <chell-web-content content_id="2"/>
+            <chell-web-content content-id="AUp2gnXYHQXx6c13tJoy"/>
         </div>
         <div>
-            <chell-web-content content_id="3"/>
+            <chell-web-content content-id="3"/>
         </div>
     </div>
     <div class="col-md-6 column" id="col2">
-        <chell-web-content content_id="3"/>
+        <chell-web-content content-id="3"/>
     </div>
     <div class="col-md-6 column" id="col3">
-        <chell-web-content content_id="1"/>
+        <chell-web-content content-id="1"/>
     </div>
 </div>
 </body>

@@ -19,3 +19,10 @@ chellCmsExample1.controller('ExampleContentController', function($scope) {
         $scope.list = true;
     };
 });
+
+chellCmsExample1.run(function run($httpBackend) {
+    $httpBackend.whenGET(/.*/).passThrough();
+    $httpBackend.whenPOST(/.*/).passThrough();
+    $httpBackend.whenPUT(/.*/).passThrough();
+    $httpBackend.whenDELETE(/.*/).passThrough();
+});

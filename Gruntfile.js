@@ -196,8 +196,8 @@ module.exports = function (grunt) {
                     files: [
                         '<%= module_dependencies.js %>',
                         '<%= pkg.name %>.js',
-                        'adapters/SlingCmsAdapter.js',
-                        'adapters/SlingCmsMock.js',
+                        'adapters/ElasticSearchCmsAdapter.js',
+                        'adapters/MockCmsMock.js',
                         'tests/*.js'
                     ],
                     frameworks: [

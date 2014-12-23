@@ -78,38 +78,33 @@ chellCms.controller('ContentFormController', function ($scope, $rootScope, CmsCo
 
     $scope.editContent = {};
 
-    $scope.config = {};
-    $scope.editor = CKEDITOR.appendTo('inputBody', $scope.config, $scope.editContent.body);
+    $scope.editorConfig = {
+        extraPlugins: 'divarea'
+    };
 
     $scope.$on('chellCms.editContent', function(event, content) {
         $scope.editContent = content;
-
-        if ($scope.editor != null) {
-            $scope.editor.destroy();
-            $scope.editor = $scope.editor = CKEDITOR.appendTo('inputBody', $scope.config, $scope.editContent.body);
-        }
     });
 
     $scope.save = function () {
-        $scope.editContent.body = $scope.editor.getData();
         var isNew = $scope.editContent.id == null;
         if (isNew) {
-            CmsContent.create($scope.editContent);
+            CmsContent.create($scope.editContent).then(function() {
+                $rootScope.$broadcast('chellCms.contentCreated');
+                $scope.cancel();
+                $scope.saveButtonHook();
+            });
         } else {
-            CmsContent.update($scope.editContent);
+            CmsContent.update($scope.editContent).then(function() {
+                $rootScope.$broadcast('chellCms.contentCreated');
+                $scope.cancel();
+                $scope.saveButtonHook();
+            });
         }
-        $scope.cancel();
-        $rootScope.$broadcast('chellCms.contentCreated');
-        $scope.saveButtonHook();
     };
 
     $scope.cancel = function () {
         $scope.editContent = {};
-
-        if ($scope.editor != null) {
-            $scope.editor.destroy();
-            $scope.editor = $scope.editor = CKEDITOR.appendTo('inputBody', $scope.config, $scope.editContent.body);
-        }
 
         if ($scope.contentForm) {
             $scope.contentForm.$setPristine();
@@ -119,19 +114,28 @@ chellCms.controller('ContentFormController', function ($scope, $rootScope, CmsCo
     };
 });
 
-chellCms.controller('WebContentController', function ($scope, $sce, $modal, $attrs, CmsContent) {
+chellCms.controller('WebContentController', function($scope, $rootScope, $sce, $modal, $attrs, CmsContent) {
 
-    $scope.contentId = $scope.$eval($attrs.contentId);
-    CmsContent.get($scope.contentId).then(function (content) {
-        $scope.content = content;
-    });
+    $scope.contentId = $attrs.contentId;
+    $scope.empty = true;
 
-    $scope.edit = function () {
+    $scope.editorConfig = {
+        extraPlugins: 'divarea'
+    };
+
+    if ($scope.contentId != null) {
+        CmsContent.get($scope.contentId).then(function (content) {
+            $scope.content = content;
+            $scope.empty = false;
+        });
+    }
+
+    $scope.select = function() {
         $scope.modalInstance = $modal.open({
             templateUrl: 'templates/content-selection-dialog.tpl.html',
             backdrop: 'false',
             keyboard: 'true',
-            controller: 'CmsSelectionModalController',
+            controller: 'ContentSelectionModalController',
             windowClass: 'modal-wide',
             resolve: {
                 content: function () {
@@ -143,18 +147,35 @@ chellCms.controller('WebContentController', function ($scope, $sce, $modal, $att
             $scope.contentId = contentId;
             CmsContent.get($scope.contentId).then(function (content) {
                 $scope.content = content;
+                $scope.empty = false;
             });
         });
     };
 
-    $scope.save = function () {
-        if (!($scope.editor))return;
-        $scope.content = $scope.editor.getData();
-        $scope.editor.destroy();
-        $scope.editor = null;
+    $scope.edit = function() {
+        $scope.modalInstance = $modal.open({
+            templateUrl: 'templates/content-edit-dialog.tpl.html',
+            backdrop: 'false',
+            keyboard: 'true',
+            controller: 'ContentEditModalController',
+            windowClass: 'modal-wide',
+            resolve: {
+                content: function () {
+                    return $scope.content;
+                }
+            }
+        });
+        $scope.modalInstance.result.then(function (content) {
+            $scope.content = content;
+            CmsContent.update($scope.content).then(function() {
+                $rootScope.$broadcast('chellCms.contentCreated');
+            });
+        });
     };
 
-    $scope.toTrusted = function (htmlCode) {
+
+
+    $scope.toTrusted = function(htmlCode) {
         return $sce.trustAsHtml(htmlCode);
     };
 });
@@ -172,10 +193,12 @@ chellCms.controller('ContentViewModalController', function ($scope, $modalInstan
     };
 });
 
-chellCms.controller('CmsSelectionModalController', function ($scope, $modalInstance, content) {
+chellCms.controller('ContentSelectionModalController', function ($scope, $modalInstance, content) {
 
-    $scope.selectedRow = content;
-    $scope.contentId = content.id;
+    if (content != null) {
+        $scope.selectedRow = content;
+        $scope.contentId = content.id;
+    }
 
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
@@ -198,4 +221,21 @@ chellCms.controller('CmsSelectionModalController', function ($scope, $modalInsta
         $scope.selectedRow = content;
         $scope.contentId = content.id;
     };
+});
+
+chellCms.controller('ContentEditModalController', function ($scope, $modalInstance, content) {
+
+    $scope.editContent = content;
+    $scope.editorConfig = {
+        extraPlugins: 'divarea'
+    };
+
+    $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+    };
+
+    $scope.save = function () {
+        $modalInstance.close($scope.editContent);
+    };
+
 });

@@ -6,17 +6,18 @@
         "styles/chell-cms.css"
     ],
     "dependencies": {
+        "jquery": "~2.1",
         "angular": "~1.2",
         "angular-resource": "~1.2",
         "angular-mocks": "~1.2",
-        "bootstrap": "~3.1",
-        "angular-bootstrap": "~0.10.0",
         "ng-table": "~0.3.2",
         "underscore": "~1.6",
+        "bootstrap": "~3.1",
         "angular-underscore-module": "",
         "angular-underscore": "",
+        "angular-bootstrap": "~0.10.0",
         "angular-translate": "~2.2.0",
-        "ckeditor": ""
+        "ng-ckeditor": ""
     },
     "devDependencies": {},
     "ignore": [

@@ -9,6 +9,7 @@ module.exports = {
     module_dependencies: {
         js: [
             // AngularJS
+            'bower-components/jquery/dist/jquery.js',
             'bower-components/angular/angular.js',
             'bower-components/angular-resource/angular-resource.js',
             'bower-components/angular-mocks/angular-mocks.js',
@@ -26,8 +27,9 @@ module.exports = {
 
             // Misc
             'bower-components/ng-table/ng-table.js',
-            'bower-components/ckeditor/ckeditor.js',
-            'bower-components/ckeditor/adapters/jquery.js'
+            'bower-components/ng-ckeditor/libs/ckeditor/ckeditor.js',
+            'bower-components/ng-ckeditor/libs/ckeditor/adapters/jquery.js',
+            'bower-components/ng-ckeditor/ng-ckeditor.js'
         ],
         css: [
             'bower-components/ng-table/ng-table.css',

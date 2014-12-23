@@ -10,7 +10,7 @@
                 "TITLE": "Title",
                 "CREATION_DATE": "Creation Date",
                 "CONTENT_ID": "Content ID",
-                "ACCESS_RIGHTS": "Access Rights",
+                "ACCESS_RIGHTS": "Created by",
                 "STATUS": "Status",
                 "ACTIONS": "Actions"
             }
@@ -24,6 +24,10 @@
             "STATUS": "Status",
             "SAVE_BUTTON": "Save",
             "CANCEL_BUTTON": "Cancel"
+        },
+        "CONTENT_SELECTION": {
+            "CANCEL_BUTTON": "Cancel",
+            "SELECT_BUTTON": "Select"
         }
     }
 }

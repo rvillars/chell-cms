@@ -458,7 +458,7 @@ angular.module("templates/content-list.tpl.html", []).run(["$templateCache", fun
     "        <tr ng-repeat=\"content in $data\">\n" +
     "            <td data-title=\"'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.TITLE' | translate\" filter=\"{'title': 'text'}\" sortable=\"'title'\" ng-bind=\"content.title\"></td>\n" +
     "            <td data-title=\"'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.CREATION_DATE' | translate\" sortable=\"'creationDate'\" ng-bind=\"content.creationDate | date:'dd.MM.yyyy'\"></td>\n" +
-    "            <td data-title=\"'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.CONTENT_ID' | translate\" sortable=\"'id'\" ng-bind=\"content.id\"></td>\n" +
+    "            <td data-title=\"'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.CONTENT_ID' | translate\" sortable=\"'id'\" filter=\"{'id': 'text'}\" ng-bind=\"content.id\" width=\"150px\"></td>\n" +
     "            <td data-title=\"'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.ACCESS_RIGHTS' | translate\" sortable=\"'accessRights'\" filter=\"{'accessRights': 'text'}\" ng-bind=\"content.accessRights\" width=\"150px\"></td>\n" +
     "            <td data-title=\"'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.STATUS' | translate\" sortable=\"'status'\" filter=\"{ 'status': 'status' }\" class=\"center\">\n" +
     "                <span class=\"label\" ng-class=\"{'label-success': content.status=='approved', 'label-warning': content.status=='draft'}\">{{content.status}}</span>\n" +

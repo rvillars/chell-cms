@@ -122,17 +122,24 @@ chellCms.directive('chellWebContent', function () {
         }
       });
       scope.inline = function () {
-        if (scope.editor) {
-          scope.save(scope.editor.getData());
-          scope.editor.destroy();
-          scope.editor = null;
-          element.find('.content').removeAttr('contenteditable');
-          scope.ok = false;
-        } else {
-          element.find('.content').attr('contenteditable', 'true');
-          scope.editor = CKEDITOR.inline(element.find('.content')[0], { startupFocus: true });
-          scope.ok = true;
-        }
+        element.find('.content').attr('contenteditable', 'true');
+        scope.editor = CKEDITOR.inline(element.find('.content')[0], { startupFocus: true });
+        scope.backup = scope.editor.getData();
+        scope.isInline = true;
+      };
+      scope.inlineSave = function () {
+        scope.save(scope.editor.getData());
+        scope.editor.destroy();
+        scope.editor = null;
+        element.find('.content').removeAttr('contenteditable');
+        scope.isInline = false;
+      };
+      scope.inlineCancel = function () {
+        scope.editor.setData(scope.backup);
+        scope.editor.destroy();
+        scope.editor = null;
+        element.find('.content').removeAttr('contenteditable');
+        scope.isInline = false;
       };
     }
   };
@@ -606,9 +613,11 @@ angular.module("templates/web-content.tpl.html", []).run(["$templateCache", func
   $templateCache.put("templates/web-content.tpl.html",
     "<div class=\"webcontent\">\n" +
     "    <div class=\"webcontent-buttons\">\n" +
-    "        <a class=\"btn btn-xs webcontent-button\" id=\"webcontent-inline-button\" ng-hide=\"empty\" ng-click=\"inline()\" ><i ng-class=\"{'glyphicon-pencil': !ok, 'glyphicon-ok': ok}\" class=\"glyphicon\"></i></a>\n" +
-    "        <a class=\"btn btn-xs webcontent-button\" id=\"webcontent-edit-button\" ng-hide=\"empty\" ng-click=\"edit()\" ><i class=\"glyphicon glyphicon-edit\"></i></a>\n" +
-    "        <a class=\"btn btn-xs webcontent-button\" id=\"webcontent-select-button\" ng-click=\"select()\"><i class=\"glyphicon glyphicon-check\"></i></a>\n" +
+    "        <a class=\"btn btn-xs webcontent-button\" id=\"webcontent-inline-save-button\" ng-hide=\"!isInline\" ng-click=\"inlineSave()\" ><i class=\"glyphicon glyphicon-ok\"></i></a>\n" +
+    "        <a class=\"btn btn-xs webcontent-button\" id=\"webcontent-inline-cancel-button\" ng-hide=\"!isInline\" ng-click=\"inlineCancel()\" ><i class=\"glyphicon glyphicon-remove\"></i></a>\n" +
+    "        <a class=\"btn btn-xs webcontent-button\" id=\"webcontent-inline-button\" ng-hide=\"empty || isInline\" ng-click=\"inline()\" ><i class=\"glyphicon glyphicon-pencil\"></i></a>\n" +
+    "        <a class=\"btn btn-xs webcontent-button\" id=\"webcontent-edit-button\" ng-hide=\"empty || isInline\" ng-click=\"edit()\" ><i class=\"glyphicon glyphicon-edit\"></i></a>\n" +
+    "        <a class=\"btn btn-xs webcontent-button\" id=\"webcontent-select-button\" ng-hide=\"isInline\" ng-click=\"select()\"><i class=\"glyphicon glyphicon-check\"></i></a>\n" +
     "    </div>\n" +
     "    <div ng-bind-html=\"toTrusted(content.body)\" class=\"content\"></div>\n" +
     "</div>\n" +

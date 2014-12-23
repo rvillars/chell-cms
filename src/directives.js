@@ -34,7 +34,7 @@ chellCms.directive('chellWebContent', function () {
     return {
         restrict: 'E',
         controller: 'WebContentController',
-        scope: {}, // This is needed so each instance has its own scope
+        scope: {},
         templateUrl: 'templates/web-content.tpl.html',
         link: function (scope, element, attrs) {
             scope.$watch('empty', function() {

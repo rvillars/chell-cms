@@ -1,8 +1,10 @@
 <div class="webcontent">
+    <div class="webcontent-buttons">
+        <a class="btn btn-xs webcontent-button" id="webcontent-inline-button" ng-hide="empty" ng-click="inline()" ><i ng-class="{'glyphicon-pencil': !ok, 'glyphicon-ok': ok}" class="glyphicon"></i></a>
+        <a class="btn btn-xs webcontent-button" id="webcontent-edit-button" ng-hide="empty" ng-click="edit()" ><i class="glyphicon glyphicon-edit"></i></a>
+        <a class="btn btn-xs webcontent-button" id="webcontent-select-button" ng-click="select()"><i class="glyphicon glyphicon-check"></i></a>
+    </div>
     <div ng-bind-html="toTrusted(content.body)" class="content"></div>
-    <a class="btn btn-xs webcontent-button" id="webcontent-select-button" ng-click="select()"><i class="glyphicon glyphicon-check"></i></a>
-    <a class="btn btn-xs webcontent-button" id="webcontent-edit-button" ng-hide="empty" ng-click="edit()" ><i class="glyphicon glyphicon-edit"></i></a>
-    <a class="btn btn-xs webcontent-button" id="webcontent-inline-button" ng-hide="empty" ng-click="inline()" ><i class="glyphicon glyphicon-pencil"></i></a>
 </div>
 
 

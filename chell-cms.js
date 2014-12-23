@@ -16,6 +16,8 @@ angular.module('translations').config(['$translateProvider',
           'EDIT_BUTTON': 'Edit content',
           'DELETE_BUTTON': 'Delete content',
           'CREATE_CONTENT_BUTTON': 'Create content',
+          'FILTER_APPROVED': 'approved',
+          'FILTER_DRAFT': 'draft',
           'COLUMN_TITLE': {
             'TITLE': 'Title',
             'CREATION_DATE': 'Creation Date',
@@ -121,12 +123,15 @@ chellCms.directive('chellWebContent', function () {
       });
       scope.inline = function () {
         if (scope.editor) {
+          scope.save(scope.editor.getData());
           scope.editor.destroy();
           scope.editor = null;
           element.find('.content').removeAttr('contenteditable');
+          scope.ok = false;
         } else {
           element.find('.content').attr('contenteditable', 'true');
           scope.editor = CKEDITOR.inline(element.find('.content')[0], { startupFocus: true });
+          scope.ok = true;
         }
       };
     }
@@ -278,6 +283,12 @@ chellCms.controller('WebContentController', [
           $scope.content = content;
           $scope.empty = false;
         });
+      });
+    };
+    $scope.save = function (body) {
+      $scope.content.body = body;
+      CmsContent.update($scope.content).then(function () {
+        $rootScope.$broadcast('chellCms.contentCreated');
       });
     };
     $scope.edit = function () {
@@ -448,9 +459,9 @@ angular.module("templates/content-list.tpl.html", []).run(["$templateCache", fun
     "            <td data-title=\"'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.TITLE' | translate\" filter=\"{'title': 'text'}\" sortable=\"'title'\" ng-bind=\"content.title\"></td>\n" +
     "            <td data-title=\"'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.CREATION_DATE' | translate\" sortable=\"'creationDate'\" ng-bind=\"content.creationDate | date:'dd.MM.yyyy'\"></td>\n" +
     "            <td data-title=\"'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.CONTENT_ID' | translate\" sortable=\"'id'\" ng-bind=\"content.id\"></td>\n" +
-    "            <td data-title=\"'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.ACCESS_RIGHTS' | translate\" sortable=\"'accessRights'\" ng-bind=\"content.accessRights\"></td>\n" +
-    "            <td data-title=\"'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.STATUS' | translate\" sortable=\"'status'\" class=\"center\">\n" +
-    "                <span class=\"badge\" ng-bind=\"content.status\"/>\n" +
+    "            <td data-title=\"'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.ACCESS_RIGHTS' | translate\" sortable=\"'accessRights'\" filter=\"{'accessRights': 'text'}\" ng-bind=\"content.accessRights\" width=\"150px\"></td>\n" +
+    "            <td data-title=\"'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.STATUS' | translate\" sortable=\"'status'\" filter=\"{ 'status': 'status' }\" class=\"center\">\n" +
+    "                <span class=\"label\" ng-class=\"{'label-success': content.status=='approved', 'label-warning': content.status=='draft'}\">{{content.status}}</span>\n" +
     "            </td>\n" +
     "            <td data-title=\"'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.ACTIONS' | translate\" class=\"center\">\n" +
     "                <div class=\"btn-group btn-group-sm\">\n" +
@@ -496,6 +507,13 @@ angular.module("templates/content-list.tpl.html", []).run(["$templateCache", fun
     "                </div>\n" +
     "            </div>\n" +
     "        </div>\n" +
+    "    </script>\n" +
+    "    <script type=\"text/ng-template\" id=\"ng-table/filters/status.html\">\n" +
+    "        <select id=\"filter-status\" class=\"form-control\" ng-model=\"params.filter()['status']\">\n" +
+    "            <option value=\"\"></option>\n" +
+    "            <option value=\"approved\">{{'CHELL_CMS.CONTENT_LIST.FILTER_APPROVED' | translate}}</option>\n" +
+    "            <option value=\"draft\">{{'CHELL_CMS.CONTENT_LIST.FILTER_DRAFT' | translate}}</option>\n" +
+    "        </select>\n" +
     "    </script>\n" +
     "</div>");
 }]);
@@ -587,10 +605,12 @@ angular.module("templates/content-view-dialog.tpl.html", []).run(["$templateCach
 angular.module("templates/web-content.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("templates/web-content.tpl.html",
     "<div class=\"webcontent\">\n" +
+    "    <div class=\"webcontent-buttons\">\n" +
+    "        <a class=\"btn btn-xs webcontent-button\" id=\"webcontent-inline-button\" ng-hide=\"empty\" ng-click=\"inline()\" ><i ng-class=\"{'glyphicon-pencil': !ok, 'glyphicon-ok': ok}\" class=\"glyphicon\"></i></a>\n" +
+    "        <a class=\"btn btn-xs webcontent-button\" id=\"webcontent-edit-button\" ng-hide=\"empty\" ng-click=\"edit()\" ><i class=\"glyphicon glyphicon-edit\"></i></a>\n" +
+    "        <a class=\"btn btn-xs webcontent-button\" id=\"webcontent-select-button\" ng-click=\"select()\"><i class=\"glyphicon glyphicon-check\"></i></a>\n" +
+    "    </div>\n" +
     "    <div ng-bind-html=\"toTrusted(content.body)\" class=\"content\"></div>\n" +
-    "    <a class=\"btn btn-xs webcontent-button\" id=\"webcontent-select-button\" ng-click=\"select()\"><i class=\"glyphicon glyphicon-check\"></i></a>\n" +
-    "    <a class=\"btn btn-xs webcontent-button\" id=\"webcontent-edit-button\" ng-hide=\"empty\" ng-click=\"edit()\" ><i class=\"glyphicon glyphicon-edit\"></i></a>\n" +
-    "    <a class=\"btn btn-xs webcontent-button\" id=\"webcontent-inline-button\" ng-hide=\"empty\" ng-click=\"inline()\" ><i class=\"glyphicon glyphicon-pencil\"></i></a>\n" +
     "</div>\n" +
     "\n" +
     "\n" +

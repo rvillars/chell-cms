@@ -152,6 +152,13 @@ chellCms.controller('WebContentController', function($scope, $rootScope, $sce, $
         });
     };
 
+    $scope.save = function(body) {
+        $scope.content.body = body;
+        CmsContent.update($scope.content).then(function() {
+            $rootScope.$broadcast('chellCms.contentCreated');
+        });
+    };
+
     $scope.edit = function() {
         $scope.modalInstance = $modal.open({
             templateUrl: 'templates/content-edit-dialog.tpl.html',
@@ -172,8 +179,6 @@ chellCms.controller('WebContentController', function($scope, $rootScope, $sce, $
             });
         });
     };
-
-
 
     $scope.toTrusted = function(htmlCode) {
         return $sce.trustAsHtml(htmlCode);

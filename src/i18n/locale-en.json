@@ -6,6 +6,8 @@
             "EDIT_BUTTON": "Edit content",
             "DELETE_BUTTON": "Delete content",
             "CREATE_CONTENT_BUTTON": "Create content",
+            "FILTER_APPROVED": "approved",
+            "FILTER_DRAFT": "draft",
             "COLUMN_TITLE": {
                 "TITLE": "Title",
                 "CREATION_DATE": "Creation Date",

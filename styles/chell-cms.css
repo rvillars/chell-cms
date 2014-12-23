@@ -1,11 +1,8 @@
-.webcontent > .webcontent-button {
+.webcontent > .webcontent-buttons {
   opacity: 0;
 }
-.webcontent:hover .webcontent-button {
+.webcontent:hover .webcontent-buttons {
   opacity: 1;
-}
-.webcontent-button {
-  z-index: 10001;
 }
 .webcontent.empty {
   height: 25px;
@@ -13,18 +10,30 @@
 .webcontent.empty:hover {
   border: 1px solid #ddd;
 }
+.webcontent-buttons {
+  position: absolute;
+  background-color: #ffffff;
+  z-index: 2;
+  width: auto;
+  top: 0px;
+  right: 0%;
+}
+.webcontent {
+  position: relative;
+}
 .form-group.required .control-label:after {
   content: "*";
   color: #a94442;
 }
 .modal-wide .modal-dialog {
   width: 800px;
+  z-index: 3;
 }
 [contenteditable="true"] {
-  z-index: 9000;
+  z-index: 1;
 }
 [contenteditable="true"]:hover {
-  z-index: 9000;
+  z-index: 1;
 }
 .table > thead > tr > td.active,
 .table > tbody > tr > td.active,

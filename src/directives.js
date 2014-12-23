@@ -46,12 +46,15 @@ chellCms.directive('chellWebContent', function () {
             });
             scope.inline = function() {
                 if (scope.editor) {
+                    scope.save(scope.editor.getData());
                     scope.editor.destroy();
                     scope.editor = null;
                     element.find('.content').removeAttr('contenteditable');
+                    scope.ok = false;
                 } else {
                     element.find('.content').attr('contenteditable', 'true');
                     scope.editor = CKEDITOR.inline(element.find('.content')[0], {startupFocus: true});
+                    scope.ok = true;
                 }
             };
         }

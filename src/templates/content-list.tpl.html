@@ -4,9 +4,9 @@
         <tbody>
         <tr ng-repeat="content in $data">
             <td data-title="'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.TITLE' | translate" filter="{'title': 'text'}" sortable="'title'" ng-bind="content.title"></td>
-            <td data-title="'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.CREATION_DATE' | translate" sortable="'creationDate'" ng-bind="content.creationDate | date:'dd.MM.yyyy'"></td>
+            <td data-title="'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.CREATION_DATE' | translate" sortable="'creationDate'" ng-bind="content.creationDate | date:'dd.MM.yyyy'" width="100px"></td>
             <td data-title="'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.CONTENT_ID' | translate" sortable="'id'" filter="{'id': 'text'}" ng-bind="content.id" width="150px"></td>
-            <td data-title="'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.ACCESS_RIGHTS' | translate" sortable="'accessRights'" filter="{'accessRights': 'text'}" ng-bind="content.accessRights" width="150px"></td>
+            <td data-title="'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.CREATED_BY' | translate" sortable="'createdBy'" filter="{'createdBy': 'text'}" ng-bind="content.createdBy" width="150px"></td>
             <td data-title="'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.STATUS' | translate" sortable="'status'" filter="{ 'status': 'status' }" class="center">
                 <span class="label" ng-class="{'label-success': content.status=='approved', 'label-warning': content.status=='draft'}">{{content.status}}</span>
             </td>

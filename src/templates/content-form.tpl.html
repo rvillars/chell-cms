@@ -15,9 +15,9 @@
                 </div>
             </div>
             <textarea ckeditor="editorConfig" ng-model="editContent.body"></textarea>
-            <div class="form-group">
-                <label for="inputStatus">{{'CHELL_CMS.CONTENT_FORM.STATUS' | translate}}</label>
-                <select class="form-control" id="inputStatus" ng-model="editContent.status" ng-value="'approved'">
+            <div class="form-group required">
+                <label for="inputStatus" class="control-label">{{'CHELL_CMS.CONTENT_FORM.STATUS' | translate}}</label>
+                <select class="form-control" id="inputStatus" ng-model="editContent.status" ng-value="'approved'" required>
                     <option>approved</option>
                     <option>draft</option>
                 </select>

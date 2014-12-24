@@ -7,6 +7,5 @@ var chellCms = angular.module('chell-cms', [
     'underscore',
     'angular-underscore',
     'ui.bootstrap',
-    'ngMockE2E',
     'translations'
 ]);

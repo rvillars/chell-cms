@@ -23,7 +23,8 @@ chellCms.directive('chellContentForm', function () {
         restrict: 'E',
         scope: {
             saveButtonHook: '&?',
-            cancelButtonHook: '&?'
+            cancelButtonHook: '&?',
+            contentCreator: '&?'
         },
         controller: 'ContentFormController',
         templateUrl: 'templates/content-form.tpl.html'

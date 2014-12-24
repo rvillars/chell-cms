@@ -22,7 +22,7 @@ angular.module('translations').config(['$translateProvider',
             'TITLE': 'Title',
             'CREATION_DATE': 'Creation Date',
             'CONTENT_ID': 'Content ID',
-            'ACCESS_RIGHTS': 'Created by',
+            'CREATED_BY': 'Created by',
             'STATUS': 'Status',
             'ACTIONS': 'Actions'
           }
@@ -54,7 +54,6 @@ var chellCms = angular.module('chell-cms', [
     'underscore',
     'angular-underscore',
     'ui.bootstrap',
-    'ngMockE2E',
     'translations'
   ]);;// Source: build/models.js
 var chellCms = angular.module('chell-cms');
@@ -101,7 +100,8 @@ chellCms.directive('chellContentForm', function () {
     restrict: 'E',
     scope: {
       saveButtonHook: '&?',
-      cancelButtonHook: '&?'
+      cancelButtonHook: '&?',
+      contentCreator: '&?'
     },
     controller: 'ContentFormController',
     templateUrl: 'templates/content-form.tpl.html'
@@ -227,7 +227,7 @@ chellCms.controller('ContentFormController', [
   '$rootScope',
   'CmsContent',
   function ($scope, $rootScope, CmsContent) {
-    $scope.editContent = {};
+    $scope.editContent = { status: 'draft' };
     $scope.editorConfig = { extraPlugins: 'divarea' };
     $scope.$on('chellCms.editContent', function (event, content) {
       $scope.editContent = content;
@@ -235,6 +235,7 @@ chellCms.controller('ContentFormController', [
     $scope.save = function () {
       var isNew = $scope.editContent.id == null;
       if (isNew) {
+        $scope.editContent.createdBy = $scope.contentCreator();
         CmsContent.create($scope.editContent).then(function () {
           $rootScope.$broadcast('chellCms.contentCreated');
           $scope.cancel();
@@ -249,7 +250,7 @@ chellCms.controller('ContentFormController', [
       }
     };
     $scope.cancel = function () {
-      $scope.editContent = {};
+      $scope.editContent = { status: 'draft' };
       if ($scope.contentForm) {
         $scope.contentForm.$setPristine();
       }
@@ -443,9 +444,9 @@ angular.module("templates/content-form.tpl.html", []).run(["$templateCache", fun
     "                </div>\n" +
     "            </div>\n" +
     "            <textarea ckeditor=\"editorConfig\" ng-model=\"editContent.body\"></textarea>\n" +
-    "            <div class=\"form-group\">\n" +
-    "                <label for=\"inputStatus\">{{'CHELL_CMS.CONTENT_FORM.STATUS' | translate}}</label>\n" +
-    "                <select class=\"form-control\" id=\"inputStatus\" ng-model=\"editContent.status\" ng-value=\"'approved'\">\n" +
+    "            <div class=\"form-group required\">\n" +
+    "                <label for=\"inputStatus\" class=\"control-label\">{{'CHELL_CMS.CONTENT_FORM.STATUS' | translate}}</label>\n" +
+    "                <select class=\"form-control\" id=\"inputStatus\" ng-model=\"editContent.status\" ng-value=\"'approved'\" required>\n" +
     "                    <option>approved</option>\n" +
     "                    <option>draft</option>\n" +
     "                </select>\n" +
@@ -465,9 +466,9 @@ angular.module("templates/content-list.tpl.html", []).run(["$templateCache", fun
     "        <tbody>\n" +
     "        <tr ng-repeat=\"content in $data\">\n" +
     "            <td data-title=\"'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.TITLE' | translate\" filter=\"{'title': 'text'}\" sortable=\"'title'\" ng-bind=\"content.title\"></td>\n" +
-    "            <td data-title=\"'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.CREATION_DATE' | translate\" sortable=\"'creationDate'\" ng-bind=\"content.creationDate | date:'dd.MM.yyyy'\"></td>\n" +
+    "            <td data-title=\"'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.CREATION_DATE' | translate\" sortable=\"'creationDate'\" ng-bind=\"content.creationDate | date:'dd.MM.yyyy'\" width=\"100px\"></td>\n" +
     "            <td data-title=\"'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.CONTENT_ID' | translate\" sortable=\"'id'\" filter=\"{'id': 'text'}\" ng-bind=\"content.id\" width=\"150px\"></td>\n" +
-    "            <td data-title=\"'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.ACCESS_RIGHTS' | translate\" sortable=\"'accessRights'\" filter=\"{'accessRights': 'text'}\" ng-bind=\"content.accessRights\" width=\"150px\"></td>\n" +
+    "            <td data-title=\"'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.CREATED_BY' | translate\" sortable=\"'createdBy'\" filter=\"{'createdBy': 'text'}\" ng-bind=\"content.createdBy\" width=\"150px\"></td>\n" +
     "            <td data-title=\"'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.STATUS' | translate\" sortable=\"'status'\" filter=\"{ 'status': 'status' }\" class=\"center\">\n" +
     "                <span class=\"label\" ng-class=\"{'label-success': content.status=='approved', 'label-warning': content.status=='draft'}\">{{content.status}}</span>\n" +
     "            </td>\n" +
@@ -540,11 +541,11 @@ angular.module("templates/content-selection-dialog.tpl.html", []).run(["$templat
     "            ng-click=\"changeSelection(content)\"\n" +
     "            ng-class=\"{'active': content.id === contentId}\">\n" +
     "            <td data-title=\"'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.TITLE' | translate\" filter=\"{'title': 'text'}\" sortable=\"'title'\" ng-bind=\"content.title\"></td>\n" +
-    "            <td data-title=\"'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.CREATION_DATE' | translate\" sortable=\"'creationDate'\" ng-bind=\"content.creationDate | date:'dd.MM.yyyy'\"></td>\n" +
-    "            <td data-title=\"'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.CONTENT_ID' | translate\" sortable=\"'id'\" ng-bind=\"content.id\"></td>\n" +
-    "            <td data-title=\"'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.ACCESS_RIGHTS' | translate\" sortable=\"'accessRights'\" ng-bind=\"content.accessRights\"></td>\n" +
-    "            <td data-title=\"'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.STATUS' | translate\" sortable=\"'status'\" class=\"center\">\n" +
-    "                <span class=\"badge\" ng-bind=\"content.status\"/>\n" +
+    "            <td data-title=\"'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.CREATION_DATE' | translate\" sortable=\"'creationDate'\" ng-bind=\"content.creationDate | date:'dd.MM.yyyy'\" width=\"100px\"></td>\n" +
+    "            <td data-title=\"'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.CONTENT_ID' | translate\" sortable=\"'id'\" filter=\"{'id': 'text'}\" ng-bind=\"content.id\" width=\"150px\"></td>\n" +
+    "            <td data-title=\"'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.CREATED_BY' | translate\" sortable=\"'createdBy'\" filter=\"{'createdBy': 'text'}\" ng-bind=\"content.createdBy\" width=\"150px\"></td>\n" +
+    "            <td data-title=\"'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.STATUS' | translate\" sortable=\"'status'\" filter=\"{ 'status': 'status' }\" class=\"center\">\n" +
+    "                <span class=\"label\" ng-class=\"{'label-success': content.status=='approved', 'label-warning': content.status=='draft'}\">{{content.status}}</span>\n" +
     "            </td>\n" +
     "            <td data-title=\"'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.ACTIONS' | translate\" class=\"center\">\n" +
     "                <div class=\"btn-group btn-group-sm\">\n" +
@@ -584,6 +585,13 @@ angular.module("templates/content-selection-dialog.tpl.html", []).run(["$templat
     "                </div>\n" +
     "            </div>\n" +
     "        </div>\n" +
+    "    </script>\n" +
+    "    <script type=\"text/ng-template\" id=\"ng-table/filters/status.html\">\n" +
+    "        <select id=\"filter-status\" class=\"form-control\" ng-model=\"params.filter()['status']\">\n" +
+    "            <option value=\"\"></option>\n" +
+    "            <option value=\"approved\">{{'CHELL_CMS.CONTENT_LIST.FILTER_APPROVED' | translate}}</option>\n" +
+    "            <option value=\"draft\">{{'CHELL_CMS.CONTENT_LIST.FILTER_DRAFT' | translate}}</option>\n" +
+    "        </select>\n" +
     "    </script>\n" +
     "</div>\n" +
     "<div class=\"modal-footer\">\n" +

@@ -10,11 +10,11 @@
             ng-click="changeSelection(content)"
             ng-class="{'active': content.id === contentId}">
             <td data-title="'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.TITLE' | translate" filter="{'title': 'text'}" sortable="'title'" ng-bind="content.title"></td>
-            <td data-title="'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.CREATION_DATE' | translate" sortable="'creationDate'" ng-bind="content.creationDate | date:'dd.MM.yyyy'"></td>
-            <td data-title="'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.CONTENT_ID' | translate" sortable="'id'" ng-bind="content.id"></td>
-            <td data-title="'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.ACCESS_RIGHTS' | translate" sortable="'accessRights'" ng-bind="content.accessRights"></td>
-            <td data-title="'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.STATUS' | translate" sortable="'status'" class="center">
-                <span class="badge" ng-bind="content.status"/>
+            <td data-title="'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.CREATION_DATE' | translate" sortable="'creationDate'" ng-bind="content.creationDate | date:'dd.MM.yyyy'" width="100px"></td>
+            <td data-title="'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.CONTENT_ID' | translate" sortable="'id'" filter="{'id': 'text'}" ng-bind="content.id" width="150px"></td>
+            <td data-title="'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.CREATED_BY' | translate" sortable="'createdBy'" filter="{'createdBy': 'text'}" ng-bind="content.createdBy" width="150px"></td>
+            <td data-title="'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.STATUS' | translate" sortable="'status'" filter="{ 'status': 'status' }" class="center">
+                <span class="label" ng-class="{'label-success': content.status=='approved', 'label-warning': content.status=='draft'}">{{content.status}}</span>
             </td>
             <td data-title="'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.ACTIONS' | translate" class="center">
                 <div class="btn-group btn-group-sm">
@@ -54,6 +54,13 @@
                 </div>
             </div>
         </div>
+    </script>
+    <script type="text/ng-template" id="ng-table/filters/status.html">
+        <select id="filter-status" class="form-control" ng-model="params.filter()['status']">
+            <option value=""></option>
+            <option value="approved">{{'CHELL_CMS.CONTENT_LIST.FILTER_APPROVED' | translate}}</option>
+            <option value="draft">{{'CHELL_CMS.CONTENT_LIST.FILTER_DRAFT' | translate}}</option>
+        </select>
     </script>
 </div>
 <div class="modal-footer">

@@ -76,7 +76,7 @@ chellCms.controller('ContentListController', function ($scope, $rootScope, $filt
 
 chellCms.controller('ContentFormController', function ($scope, $rootScope, CmsContent) {
 
-    $scope.editContent = {};
+    $scope.editContent = {status:'draft'};
 
     $scope.editorConfig = {
         extraPlugins: 'divarea'
@@ -89,6 +89,7 @@ chellCms.controller('ContentFormController', function ($scope, $rootScope, CmsCo
     $scope.save = function () {
         var isNew = $scope.editContent.id == null;
         if (isNew) {
+            $scope.editContent.createdBy = $scope.contentCreator();
             CmsContent.create($scope.editContent).then(function() {
                 $rootScope.$broadcast('chellCms.contentCreated');
                 $scope.cancel();
@@ -104,7 +105,7 @@ chellCms.controller('ContentFormController', function ($scope, $rootScope, CmsCo
     };
 
     $scope.cancel = function () {
-        $scope.editContent = {};
+        $scope.editContent = {status:'draft'};
 
         if ($scope.contentForm) {
             $scope.contentForm.$setPristine();

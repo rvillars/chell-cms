@@ -2,7 +2,8 @@
 'use strict';
 
 var chellCmsExample1 = angular.module('chell-cms-example1', [
-    'chell-cms'
+    'chell-cms',
+    'ngMockE2E'
 ]);
 
 chellCmsExample1.controller('ExampleContentController', function($scope) {
@@ -21,6 +22,10 @@ chellCmsExample1.controller('ExampleContentController', function($scope) {
 
     $scope.readOnly = function() {
         return true;
+    };
+
+    $scope.currentUser = function() {
+        return 'testUser';
     };
 });
 

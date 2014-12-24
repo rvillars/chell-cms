@@ -86,7 +86,7 @@ var externalToCmsContent = function (externalContent) {
   cmsContent.body = externalContent.body;
   cmsContent.status = externalContent.status;
   cmsContent.id = externalContent['__name__'];
-  cmsContent.accessRights = externalContent['jcr:createdBy'];
+  cmsContent.createdBy = externalContent['jcr:createdBy'];
   cmsContent.creationDate = new Date(Date.parse(externalContent['jcr:created']));
   return cmsContent;
 };

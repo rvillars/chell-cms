@@ -12,7 +12,7 @@
                 "TITLE": "Title",
                 "CREATION_DATE": "Creation Date",
                 "CONTENT_ID": "Content ID",
-                "ACCESS_RIGHTS": "Created by",
+                "CREATED_BY": "Created by",
                 "STATUS": "Status",
                 "ACTIONS": "Actions"
             }

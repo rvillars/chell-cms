@@ -39,7 +39,7 @@
     <div class="col-md-12 column" >
         <div ng-show="detail">
             <h2>Content Form</h2>
-            <chell-content-form save-button-hook="showList()" cancel-button-hook="showList()"/>
+            <chell-content-form save-button-hook="showList()" cancel-button-hook="showList()" content-creator="currentUser()"/>
         </div>
         <div ng-show="list">
             <h2>Content List</h2>

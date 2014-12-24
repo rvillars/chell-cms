@@ -59,7 +59,7 @@ var externalToCmsContent = function(externalContent) {
     cmsContent.body = externalContent._source.body;
     cmsContent.status = externalContent._source.status;
     cmsContent.id = externalContent._id;
-    cmsContent.accessRights = externalContent._source.accessRights;
+    cmsContent.createdBy = externalContent._source.createdBy;
     cmsContent.creationDate = externalContent._source.creationDate;
     return cmsContent;
 };
@@ -68,8 +68,8 @@ var cmsToExternalContent = function(cmsContent) {
     externalContent.title = cmsContent.title;
     externalContent.body = cmsContent.body;
     externalContent.status = cmsContent.status;
+    externalContent.createdBy = cmsContent.createdBy;
     externalContent.creationDate = new Date();
-    externalContent.accessRights = 'none';
     return externalContent;
 };
 

@@ -5,7 +5,7 @@ chellCms.run(function($httpBackend) {
         id: 0,
         title: 'Welcome Page',
         creationDate: new Date(),
-        accessRights: 'User',
+        createdBy: 'User',
         status: 'approved',
         body: '<h1>A welcome page</h1>'
     };
@@ -13,7 +13,7 @@ chellCms.run(function($httpBackend) {
         id: 1,
         title: 'Image',
         creationDate: new Date(),
-        accessRights: 'User',
+        createdBy: 'User',
         status: 'draft',
         body: '<img alt="" style="padding-left: 90px;" src="http://lorempixel.com/400/200" />'
     };
@@ -21,7 +21,7 @@ chellCms.run(function($httpBackend) {
         id: 2,
         title: 'Lorem Ipsum',
         creationDate: new Date(),
-        accessRights: 'User',
+        createdBy: 'User',
         status: 'draft',
         body: '<h1>A Lorem Ipsum Text</h1><p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>'
     };
@@ -29,7 +29,7 @@ chellCms.run(function($httpBackend) {
         id: 3,
         title: 'Footer',
         creationDate: new Date(),
-        accessRights: 'User',
+        createdBy: 'Administrator',
         status: 'draft',
         body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.'
     };

@@ -34,9 +34,9 @@
 
 </head>
 <body>
-<div style="width: 928px; margin: 0 auto;">
+<div style="width: 928px; margin: 0 auto;" ng-controller="ExampleContentController">
 
-    <div class="col-md-12 column" ng-controller="ExampleContentController">
+    <div class="col-md-12 column" >
         <div ng-show="detail">
             <h2>Content Form</h2>
             <chell-content-form save-button-hook="showList()" cancel-button-hook="showList()"/>
@@ -51,14 +51,14 @@
         <h2>Content</h2>
 
         <div>
-            <chell-web-content content-id="AUp2gnXYHQXx6c13tJoy"/>
+            <chell-web-content content-id="AUp2gnXYHQXx6c13tJoy" read-only="readOnly()"/>
         </div>
         <div>
             <chell-web-content content-id="AUp5DjxjHQXx6c13tJo1"/>
         </div>
     </div>
     <div class="col-md-6 column" id="col2">
-        <chell-web-content content-id="3"/>
+        <chell-web-content content-id="3" read-only="readOnly()"/>
     </div>
     <div class="col-md-6 column" id="col3">
         <chell-web-content content-id="1"/>

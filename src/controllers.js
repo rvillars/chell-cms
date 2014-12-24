@@ -114,9 +114,8 @@ chellCms.controller('ContentFormController', function ($scope, $rootScope, CmsCo
     };
 });
 
-chellCms.controller('WebContentController', function($scope, $rootScope, $sce, $modal, $attrs, CmsContent) {
+chellCms.controller('WebContentController', function($scope, $rootScope, $sce, $modal, CmsContent) {
 
-    $scope.contentId = $attrs.contentId;
     $scope.empty = true;
 
     $scope.editorConfig = {

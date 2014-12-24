@@ -1,5 +1,5 @@
 <div class="webcontent">
-    <div class="webcontent-buttons">
+    <div class="webcontent-buttons" ng-hide="readOnly()">
         <a class="btn btn-xs webcontent-button" id="webcontent-inline-save-button" ng-hide="!isInline" ng-click="inlineSave()" ><i class="glyphicon glyphicon-ok"></i></a>
         <a class="btn btn-xs webcontent-button" id="webcontent-inline-cancel-button" ng-hide="!isInline" ng-click="inlineCancel()" ><i class="glyphicon glyphicon-remove"></i></a>
         <a class="btn btn-xs webcontent-button" id="webcontent-inline-button" ng-hide="empty || isInline" ng-click="inline()" ><i class="glyphicon glyphicon-pencil"></i></a>

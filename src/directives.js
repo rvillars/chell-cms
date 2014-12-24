@@ -34,11 +34,14 @@ chellCms.directive('chellWebContent', function () {
     return {
         restrict: 'E',
         controller: 'WebContentController',
-        scope: {},
+        scope: {
+            contentId: '@?',
+            readOnly: '&?'
+        },
         templateUrl: 'templates/web-content.tpl.html',
         link: function (scope, element, attrs) {
             scope.$watch('empty', function() {
-                if (scope.empty) {
+                if (scope.empty && !scope.readOnly()) {
                     element.children('.webcontent').addClass('empty');
                 } else {
                     element.children('.webcontent').removeClass('empty');

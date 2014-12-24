@@ -111,11 +111,14 @@ chellCms.directive('chellWebContent', function () {
   return {
     restrict: 'E',
     controller: 'WebContentController',
-    scope: {},
+    scope: {
+      contentId: '@?',
+      readOnly: '&?'
+    },
     templateUrl: 'templates/web-content.tpl.html',
     link: function (scope, element, attrs) {
       scope.$watch('empty', function () {
-        if (scope.empty) {
+        if (scope.empty && !scope.readOnly()) {
           element.children('.webcontent').addClass('empty');
         } else {
           element.children('.webcontent').removeClass('empty');
@@ -259,10 +262,8 @@ chellCms.controller('WebContentController', [
   '$rootScope',
   '$sce',
   '$modal',
-  '$attrs',
   'CmsContent',
-  function ($scope, $rootScope, $sce, $modal, $attrs, CmsContent) {
-    $scope.contentId = $attrs.contentId;
+  function ($scope, $rootScope, $sce, $modal, CmsContent) {
     $scope.empty = true;
     $scope.editorConfig = { extraPlugins: 'divarea' };
     if ($scope.contentId != null) {
@@ -612,7 +613,7 @@ angular.module("templates/content-view-dialog.tpl.html", []).run(["$templateCach
 angular.module("templates/web-content.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("templates/web-content.tpl.html",
     "<div class=\"webcontent\">\n" +
-    "    <div class=\"webcontent-buttons\">\n" +
+    "    <div class=\"webcontent-buttons\" ng-hide=\"readOnly()\">\n" +
     "        <a class=\"btn btn-xs webcontent-button\" id=\"webcontent-inline-save-button\" ng-hide=\"!isInline\" ng-click=\"inlineSave()\" ><i class=\"glyphicon glyphicon-ok\"></i></a>\n" +
     "        <a class=\"btn btn-xs webcontent-button\" id=\"webcontent-inline-cancel-button\" ng-hide=\"!isInline\" ng-click=\"inlineCancel()\" ><i class=\"glyphicon glyphicon-remove\"></i></a>\n" +
     "        <a class=\"btn btn-xs webcontent-button\" id=\"webcontent-inline-button\" ng-hide=\"empty || isInline\" ng-click=\"inline()\" ><i class=\"glyphicon glyphicon-pencil\"></i></a>\n" +

@@ -18,6 +18,10 @@ chellCmsExample1.controller('ExampleContentController', function($scope) {
         $scope.detail = false;
         $scope.list = true;
     };
+
+    $scope.readOnly = function() {
+        return true;
+    };
 });
 
 chellCmsExample1.run(function run($httpBackend) {

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html ng-app="chell-cms-example1">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>chell-cms Example 1</title>
+
+    <!-- compiled CSS -->
+    <link rel="stylesheet" type="text/css" href="bower-components/ng-table/ng-table.css" />
+    <link rel="stylesheet" type="text/css" href="bower-components/bootstrap/dist/css/bootstrap.css" />
+
+    <!-- compiled JavaScript -->
+    <script type="text/javascript" src="bower-components/jquery/dist/jquery.js"></script>
+    <script type="text/javascript" src="bower-components/angular/angular.js"></script>
+    <script type="text/javascript" src="bower-components/angular-resource/angular-resource.js"></script>
+    <script type="text/javascript" src="bower-components/angular-mocks/angular-mocks.js"></script>
+    <script type="text/javascript" src="bower-components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script type="text/javascript" src="bower-components/underscore/underscore.js"></script>
+    <script type="text/javascript" src="bower-components/angular-underscore-module/angular-underscore-module.js"></script>
+    <script type="text/javascript" src="bower-components/angular-underscore/angular-underscore.js"></script>
+    <script type="text/javascript" src="bower-components/angular-translate/angular-translate.js"></script>
+    <script type="text/javascript" src="bower-components/ng-table/ng-table.js"></script>
+    <script type="text/javascript" src="bower-components/ng-ckeditor/libs/ckeditor/ckeditor.js"></script>
+    <script type="text/javascript" src="bower-components/ng-ckeditor/libs/ckeditor/adapters/jquery.js"></script>
+    <script type="text/javascript" src="bower-components/ng-ckeditor/ng-ckeditor.js"></script>
+
+    <script type="text/javascript" src="chell-cms.js"></script>
+    <!--<script type="text/javascript" src="adapters/SlingCmsAdapter.js"></script>-->
+    <!--<script type="text/javascript" src="adapters/ElasticSearchCmsAdapter.js"></script>-->
+    <script type="text/javascript" src="adapters/MockCmsAdapter.js"></script>
+    <script type="text/javascript" src="adapters/MockCmsMock.js"></script>
+    <script type="text/javascript" src="example1.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="styles/chell-cms.css" />
+
+</head>
+<body>
+<div style="width: 928px; margin: 0 auto;" ng-controller="ExampleContentController">
+
+    <div class="col-md-12 column" >
+        <div ng-show="detail">
+            <h2>Content Form</h2>
+            <chell-content-form save-button-hook="showList()" cancel-button-hook="showList()" content-creator="currentUser()"/>
+        </div>
+        <div ng-show="list">
+            <h2>Content List</h2>
+            <chell-content-list show-create-button="true" create-button-hook="showDetail()" edit-button-hook="showDetail()" read-only="false"/>
+        </div>
+    </div>
+
+    <div class="col-md-12 column" id="col1">
+        <div>
+            <chell-web-content content-id="0" read-only="readOnly()"/>
+        </div>
+        <div>
+            <chell-web-content content-id="2"/>
+        </div>
+    </div>
+    <div class="col-md-6 column" id="col2">
+        <chell-web-content content-id="3" read-only="readOnly()"/>
+    </div>
+    <div class="col-md-6 column" id="col3">
+        <chell-web-content content-id="1"/>
+    </div>
+</div>
+</body>
+</html>

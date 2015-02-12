@@ -1,0 +1,51 @@
+.webcontent > .webcontent-buttons {
+  opacity: 0;
+}
+.webcontent:hover .webcontent-buttons {
+  opacity: 1;
+}
+.webcontent.empty {
+  height: 25px;
+}
+.webcontent.empty:hover {
+  border: 1px solid #ddd;
+}
+.webcontent-buttons {
+  position: absolute;
+  background-color: #ffffff;
+  z-index: 2;
+  width: auto;
+  top: 0px;
+  right: 0%;
+}
+.webcontent {
+  position: relative;
+}
+.form-group.required .control-label:after {
+  content: "*";
+  color: #a94442;
+}
+.modal-wide .modal-dialog {
+  width: 800px;
+  z-index: 3;
+}
+[contenteditable="true"] {
+  z-index: 1;
+}
+[contenteditable="true"]:hover {
+  z-index: 1;
+}
+.table > thead > tr > td.active,
+.table > tbody > tr > td.active,
+.table > tfoot > tr > td.active,
+.table > thead > tr > th.active,
+.table > tbody > tr > th.active,
+.table > tfoot > tr > th.active,
+.table > thead > tr.active > td,
+.table > tbody > tr.active > td,
+.table > tfoot > tr.active > td,
+.table > thead > tr.active > th,
+.table > tbody > tr.active > th,
+.table > tfoot > tr.active > th {
+  background-color: rgba(141, 192, 219, 0.25);
+}

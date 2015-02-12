@@ -440,7 +440,7 @@ angular.module("templates/content-form.tpl.html", []).run(["$templateCache", fun
     "                <div class=\"form-group col-md-6\">\n" +
     "                    <label for=\"inputContentId\" class=\"control-label\">{{'CHELL_CMS.CONTENT_FORM.CONTENT_ID' | translate}}</label>\n" +
     "                    <input class=\"form-control\" id=\"inputContentId\" placeholder=\"{{'CHELL_CMS.CONTENT_FORM.PH_GENERATED' | translate}}\" readonly=\"true\"\n" +
-    "                           ng-model=\"editContent.id\"/>\n" +
+    "                           ng-model=\"editContent.id\" tabindex=\"-1\"/>\n" +
     "                </div>\n" +
     "            </div>\n" +
     "            <textarea ckeditor=\"editorConfig\" ng-model=\"editContent.body\"></textarea>\n" +

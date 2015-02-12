@@ -11,7 +11,7 @@
                 <div class="form-group col-md-6">
                     <label for="inputContentId" class="control-label">{{'CHELL_CMS.CONTENT_FORM.CONTENT_ID' | translate}}</label>
                     <input class="form-control" id="inputContentId" placeholder="{{'CHELL_CMS.CONTENT_FORM.PH_GENERATED' | translate}}" readonly="true"
-                           ng-model="editContent.id"/>
+                           ng-model="editContent.id" tabindex="-1"/>
                 </div>
             </div>
             <textarea ckeditor="editorConfig" ng-model="editContent.body"></textarea>

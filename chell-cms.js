@@ -386,10 +386,11 @@ angular.module('chell-cms.webContentWidget', ['chell-widget.provider']).config([
   function (dashboardProvider) {
     dashboardProvider.widget('webContent', {
       title: 'WebContent',
+      height: '100px',
       description: 'Display CMS web content in a widget',
       templateUrl: 'widgets/webContent/view.tpl.html',
       controller: 'widgetWebContentController',
-      config: { webContentId: '' }
+      config: {}
     });
   }
 ]).controller('widgetWebContentController', [
@@ -657,6 +658,6 @@ angular.module("templates/web-content.tpl.html", []).run(["$templateCache", func
 angular.module("widgets/webContent/view.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("widgets/webContent/view.tpl.html",
     "<div>\n" +
-    "    <chell-web-content content-id=\"{{config.webContentId}}\"/>\n" +
+    "    <chell-web-content/>\n" +
     "</div>");
 }]);

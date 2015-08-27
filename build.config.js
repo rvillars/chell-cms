@@ -45,7 +45,8 @@ module.exports = {
         'module.js',
         'models.js',
         'directives.js',
-        'controllers.js'
+        'controllers.js',
+        'widgets/**/*.js'
     ],
 
     module_adapters: [

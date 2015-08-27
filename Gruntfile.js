@@ -70,7 +70,7 @@ module.exports = function (grunt) {
                         src: [ '<%= module_files %>' ],
                         dest: 'build',
                         expand: true,
-                        flatten: true
+                        flatten: false
                     }
                 ]
             },
@@ -153,13 +153,13 @@ module.exports = function (grunt) {
                     base: 'src',
                     module: 'templates-<%= pkg.name %>'
                 },
-                src: [ 'src/templates/**/*.tpl.html' ],
+                src: [ 'src/**/*.tpl.html' ],
                 dest: 'build/templates.js'
             }
         },
         i18nextract: {
             default_options: {
-                src: [ 'src/*.js', 'src/templates/**/*.tpl.html' ],
+                src: [ 'src/*.js', 'src/**/*.tpl.html' ],
                 lang: ['en'],
                 prefix: 'locale-',
                 dest: 'src/i18n',

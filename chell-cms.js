@@ -380,8 +380,27 @@ chellCms.controller('ContentEditModalController', [
       $modalInstance.close($scope.editContent);
     };
   }
+]);;// Source: build/widgets/webContent/webContent.js
+angular.module('chell-cms.webContentWidget', ['chell-widget.provider']).config([
+  'dashboardProvider',
+  function (dashboardProvider) {
+    dashboardProvider.widget('webConenten', {
+      title: 'WebContent',
+      description: 'Display CMS Webcontent in a widget',
+      templateUrl: 'widgets/webContent/view.tpl.html',
+      controller: 'widgetWebContentController',
+      config: { webContentId: '' },
+      edit: { templateUrl: 'templates/content-selection-dialog.tpl.html' }
+    });
+  }
+]).controller('widgetWebContentController', [
+  '$scope',
+  '$sce',
+  'config',
+  function ($scope, $sce, config) {
+  }
 ]);;// Source: build/templates.js
-angular.module('templates-chell-cms', ['templates/content-edit-dialog.tpl.html', 'templates/content-form.tpl.html', 'templates/content-list.tpl.html', 'templates/content-selection-dialog.tpl.html', 'templates/content-view-dialog.tpl.html', 'templates/web-content.tpl.html']);
+angular.module('templates-chell-cms', ['templates/content-edit-dialog.tpl.html', 'templates/content-form.tpl.html', 'templates/content-list.tpl.html', 'templates/content-selection-dialog.tpl.html', 'templates/content-view-dialog.tpl.html', 'templates/web-content.tpl.html', 'widgets/webContent/view.tpl.html']);
 
 angular.module("templates/content-edit-dialog.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("templates/content-edit-dialog.tpl.html",
@@ -635,4 +654,11 @@ angular.module("templates/web-content.tpl.html", []).run(["$templateCache", func
     "\n" +
     "\n" +
     "");
+}]);
+
+angular.module("widgets/webContent/view.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("widgets/webContent/view.tpl.html",
+    "<div>\n" +
+    "    <chell-web-content content-id=\"{{webContentId}}\"/>\n" +
+    "</div>");
 }]);

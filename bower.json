@@ -1,6 +1,6 @@
 {
     "name": "chell-cms",
-    "version": "0.0.1",
+    "version": "0.2.0",
     "main": [
         "chell-cms.js",
         "styles/chell-cms.css"

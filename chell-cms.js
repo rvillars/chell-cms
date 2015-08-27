@@ -389,8 +389,7 @@ angular.module('chell-cms.webContentWidget', ['chell-widget.provider']).config([
       description: 'Display CMS web content in a widget',
       templateUrl: 'widgets/webContent/view.tpl.html',
       controller: 'widgetWebContentController',
-      config: { webContentId: '1' },
-      edit: { templateUrl: 'widgets/webContent/edit.tpl.html' }
+      config: { webContentId: '' }
     });
   }
 ]).controller('widgetWebContentController', [
@@ -399,7 +398,7 @@ angular.module('chell-cms.webContentWidget', ['chell-widget.provider']).config([
   function ($scope, config) {
   }
 ]);;// Source: build/templates.js
-angular.module('templates-chell-cms', ['templates/content-edit-dialog.tpl.html', 'templates/content-form.tpl.html', 'templates/content-list.tpl.html', 'templates/content-selection-dialog.tpl.html', 'templates/content-view-dialog.tpl.html', 'templates/web-content.tpl.html', 'widgets/webContent/edit.tpl.html', 'widgets/webContent/view.tpl.html']);
+angular.module('templates-chell-cms', ['templates/content-edit-dialog.tpl.html', 'templates/content-form.tpl.html', 'templates/content-list.tpl.html', 'templates/content-selection-dialog.tpl.html', 'templates/content-view-dialog.tpl.html', 'templates/web-content.tpl.html', 'widgets/webContent/view.tpl.html']);
 
 angular.module("templates/content-edit-dialog.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("templates/content-edit-dialog.tpl.html",
@@ -653,79 +652,6 @@ angular.module("templates/web-content.tpl.html", []).run(["$templateCache", func
     "\n" +
     "\n" +
     "");
-}]);
-
-angular.module("widgets/webContent/edit.tpl.html", []).run(["$templateCache", function($templateCache) {
-  $templateCache.put("widgets/webContent/edit.tpl.html",
-    "<div>\n" +
-    "    <fieldset>\n" +
-    "        <div class=\"form-group\">\n" +
-    "            <label for=\"inputWebContentId\">Web Content ID</label>\n" +
-    "            <input class=\"form-control\" id=\"inputWebContentId\" ng-model=\"config.webContentId\">\n" +
-    "        </div>\n" +
-    "    </fieldset>\n" +
-    "</div>\n" +
-    "<div ng-controller=\"ContentListController\">\n" +
-    "    <table ng-table=\"tableParams\" show-filter=\"true\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" template-pagination=\"custom/pager/content\" class=\"table table-striped table-bordered\"\n" +
-    "           id=\"contentDatatable\">\n" +
-    "        <tbody>\n" +
-    "        <tr ng-repeat=\"content in $data\"\n" +
-    "            ng-click=\"changeSelection(content)\"\n" +
-    "            ng-class=\"{'active': content.id === contentId}\">\n" +
-    "            <td data-title=\"'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.TITLE' | translate\" filter=\"{'title': 'text'}\" sortable=\"'title'\" ng-bind=\"content.title\"></td>\n" +
-    "            <td data-title=\"'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.CREATION_DATE' | translate\" sortable=\"'creationDate'\" ng-bind=\"content.creationDate | date:'dd.MM.yyyy'\" width=\"100px\"></td>\n" +
-    "            <td data-title=\"'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.CONTENT_ID' | translate\" sortable=\"'id'\" filter=\"{'id': 'text'}\" ng-bind=\"content.id\" width=\"150px\"></td>\n" +
-    "            <td data-title=\"'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.CREATED_BY' | translate\" sortable=\"'createdBy'\" filter=\"{'createdBy': 'text'}\" ng-bind=\"content.createdBy\" width=\"150px\"></td>\n" +
-    "            <td data-title=\"'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.STATUS' | translate\" sortable=\"'status'\" filter=\"{ 'status': 'status' }\" class=\"center\">\n" +
-    "                <span class=\"label\" ng-class=\"{'label-success': content.status=='approved', 'label-warning': content.status=='draft'}\">{{content.status}}</span>\n" +
-    "            </td>\n" +
-    "            <td data-title=\"'CHELL_CMS.CONTENT_LIST.COLUMN_TITLE.ACTIONS' | translate\" class=\"center\">\n" +
-    "                <div class=\"btn-group btn-group-sm\">\n" +
-    "                    <a class=\"btn btn-default\" rel=\"tooltip\" title=\"{{'CHELL_CMS.CONTENT_LIST.VIEW_BUTTON' | translate}}\" ng-click=\"view(content)\">\n" +
-    "                        <i class=\"glyphicon glyphicon-zoom-in icon-white\"></i>\n" +
-    "                    </a>\n" +
-    "                </div>\n" +
-    "            </td>\n" +
-    "        </tr>\n" +
-    "        </tbody>\n" +
-    "    </table>\n" +
-    "    <script type=\"text/ng-template\" id=\"custom/pager/content\">\n" +
-    "        <div class=\"row\">\n" +
-    "            <div class=\"col-md-4\">\n" +
-    "                <button class=\"btn btn-default\" ng-show=\"$parent.$parent.showCreateButton && !$parent.$parent.readOnly()\" ng-click=\"$parent.$parent.create()\"><i style=\"padding-right: 10px\" class=\"glyphicon glyphicon-edit\"></i>{{'CHELL_CMS.CONTENT_LIST.CREATE_CONTENT_BUTTON'\n" +
-    "                    | translate}}\n" +
-    "                </button>\n" +
-    "            </div>\n" +
-    "            <div class=\"col-md-4\">\n" +
-    "                <div class=\"btn-group center-block\">\n" +
-    "                    <button class=\"btn btn-default center-block\" ng-click=\"params.page(page.number)\" ng-class=\"{'disabled': !page.active}\" ng-repeat=\"page in pages\" ng-switch=\"page.type\">\n" +
-    "                        <div ng-switch-when=\"prev\" ng-click=\"params.page(page.number)\">&laquo;</div>\n" +
-    "                        <div ng-switch-when=\"first\" ng-click=\"params.page(page.number)\"><span ng-bind=\"page.number\"></span></div>\n" +
-    "                        <div ng-switch-when=\"page\" ng-click=\"params.page(page.number)\"><span ng-bind=\"page.number\"></span></div>\n" +
-    "                        <div ng-switch-when=\"more\" ng-click=\"params.page(page.number)\">&#8230;</div>\n" +
-    "                        <div ng-switch-when=\"last\" ng-click=\"params.page(page.number)\"><span ng-bind=\"page.number\"></span></div>\n" +
-    "                        <div ng-switch-when=\"next\" ng-click=\"params.page(page.number)\">&raquo;</div>\n" +
-    "                    </button>\n" +
-    "                </div>\n" +
-    "            </div>\n" +
-    "            <div class=\"col-md-4\">\n" +
-    "                <div ng-if=\"params.settings().counts.length\" class=\"ng-table-counts btn-group pull-right\">\n" +
-    "                    <button type=\"button\" ng-class=\"{'active':params.count() == 10}\" ng-click=\"params.count(10)\" class=\"btn btn-default\">10</button>\n" +
-    "                    <button type=\"button\" ng-class=\"{'active':params.count() == 25}\" ng-click=\"params.count(25)\" class=\"btn btn-default\">25</button>\n" +
-    "                    <button type=\"button\" ng-class=\"{'active':params.count() == 50}\" ng-click=\"params.count(50)\" class=\"btn btn-default\">50</button>\n" +
-    "                    <button type=\"button\" ng-class=\"{'active':params.count() == 100}\" ng-click=\"params.count(100)\" class=\"btn btn-default\">100</button>\n" +
-    "                </div>\n" +
-    "            </div>\n" +
-    "        </div>\n" +
-    "    </script>\n" +
-    "    <script type=\"text/ng-template\" id=\"ng-table/filters/status.html\">\n" +
-    "        <select id=\"filter-status\" class=\"form-control\" ng-model=\"params.filter()['status']\">\n" +
-    "            <option value=\"\"></option>\n" +
-    "            <option value=\"approved\">{{'CHELL_CMS.CONTENT_LIST.FILTER_APPROVED' | translate}}</option>\n" +
-    "            <option value=\"draft\">{{'CHELL_CMS.CONTENT_LIST.FILTER_DRAFT' | translate}}</option>\n" +
-    "        </select>\n" +
-    "    </script>\n" +
-    "</div>");
 }]);
 
 angular.module("widgets/webContent/view.tpl.html", []).run(["$templateCache", function($templateCache) {

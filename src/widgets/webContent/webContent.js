@@ -9,10 +9,7 @@ angular.module('chell-cms.webContentWidget', ['chell-widget.provider'])
                 templateUrl: 'widgets/webContent/view.tpl.html',
                 controller: 'widgetWebContentController',
                 config: {
-                    webContentId: '1'
-                },
-                edit: {
-                    templateUrl: 'widgets/webContent/edit.tpl.html'
+                    webContentId: ''
                 }
             });
     })

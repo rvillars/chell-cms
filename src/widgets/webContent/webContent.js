@@ -3,7 +3,7 @@
 angular.module('chell-cms.webContentWidget', ['chell-widget.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
-            .widget('webConenten', {
+            .widget('webContent', {
                 title: 'WebContent',
                 description: 'Display CMS Webcontent in a widget',
                 templateUrl: 'widgets/webContent/view.tpl.html',

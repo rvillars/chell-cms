@@ -1,19 +1,18 @@
 'use strict';
 
-angular.module('chell-cms.webContentWidget', ['chell-widget.provider'])
+angular.module('chell-cms.webContent', ['chell-widget.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
             .widget('webContent', {
                 title: 'WebContent',
-                description: 'Display CMS Webcontent in a widget',
+                description: 'Display CMS web content in a widget',
                 templateUrl: 'widgets/webContent/view.tpl.html',
                 controller: 'widgetWebContentController',
                 config: {
                     webContentId: ''
                 },
                 edit: {
-                    templateUrl: 'templates/content-selection-dialog.tpl.html',
-                    controller: 'ContentSelectionModalController'
+                    templateUrl: 'widgets/webContent/edit.tpl.html'
                 }
             });
     })

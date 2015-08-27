@@ -657,6 +657,14 @@ angular.module("templates/web-content.tpl.html", []).run(["$templateCache", func
 
 angular.module("widgets/webContent/edit.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("widgets/webContent/edit.tpl.html",
+    "<div>\n" +
+    "    <fieldset>\n" +
+    "        <div class=\"form-group\">\n" +
+    "            <label for=\"inputWebContentId\">Web Content ID</label>\n" +
+    "            <input class=\"form-control\" id=\"inputWebContentId\" ng-model=\"config.webContentId\">\n" +
+    "        </div>\n" +
+    "    </fieldset>\n" +
+    "</div>\n" +
     "<div ng-controller=\"ContentListController\">\n" +
     "    <table ng-table=\"tableParams\" show-filter=\"true\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" template-pagination=\"custom/pager/content\" class=\"table table-striped table-bordered\"\n" +
     "           id=\"contentDatatable\">\n" +
@@ -723,6 +731,6 @@ angular.module("widgets/webContent/edit.tpl.html", []).run(["$templateCache", fu
 angular.module("widgets/webContent/view.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("widgets/webContent/view.tpl.html",
     "<div>\n" +
-    "    <chell-web-content content-id=\"{{webContentId}}\"/>\n" +
+    "    <chell-web-content content-id=\"{{config.webContentId}}\"/>\n" +
     "</div>");
 }]);

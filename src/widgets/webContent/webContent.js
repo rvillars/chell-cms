@@ -12,7 +12,8 @@ angular.module('chell-cms.webContentWidget', ['chell-widget.provider'])
                     webContentId: ''
                 },
                 edit: {
-                    templateUrl: 'templates/content-selection-dialog.tpl.html'
+                    templateUrl: 'templates/content-selection-dialog.tpl.html',
+                    controller: 'ContentSelectionModalController'
                 }
             });
     })

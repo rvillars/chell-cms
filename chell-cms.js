@@ -381,7 +381,7 @@ chellCms.controller('ContentEditModalController', [
     };
   }
 ]);;// Source: build/widgets/webContent/webContent.js
-angular.module('chell-cms.webContent', ['chell-widget.provider']).config([
+angular.module('chell-cms.webContentWidget', ['chell-widget.provider']).config([
   'dashboardProvider',
   function (dashboardProvider) {
     dashboardProvider.widget('webContent', {

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('chell-cms.webContent', ['chell-widget.provider'])
+angular.module('chell-cms.webContentWidget', ['chell-widget.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
             .widget('webContent', {

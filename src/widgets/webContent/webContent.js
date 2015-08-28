@@ -10,9 +10,29 @@ angular.module('chell-cms.webContentWidget', ['chell-widget.provider'])
                 controller: 'widgetWebContentController',
                 config: {
                     webContentId: ''
+                },
+                edit: {
+                    templateUrl: 'widgets/webContent/edit.tpl.html'
                 }
             });
     })
     .controller('widgetWebContentController', function ($scope, config) {
 
+    })
+    .controller('widgetWebContentEditController', function ($scope) {
+        $scope.changeSelection = function(content) {
+
+            // unselect on second click
+            if ($scope.selectedRow == content) {
+                $scope.selectedRow = null;
+                $scope.contentId = null;
+                $scope.config.webContentId = null;
+                return;
+            }
+
+            // select new
+            $scope.selectedRow = content;
+            $scope.contentId = content.id;
+            $scope.config.webContentId = content.id;
+        };
     });

@@ -2,7 +2,7 @@
 
 ## Example/Screenshots
 
-[Example Site](http://mimacom.github.io/chell-cms/example/example1.html)
+[Example Site](https://rawgit.com/rvillars/chell-cms/master/examples/example1.html)
 
 #### Content List
 ![user-list](https://raw.githubusercontent.com/mimacom/chell-cms/gh-pages/screenshots/content-list.png "Content List")
